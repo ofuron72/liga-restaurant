@@ -1,0 +1,8 @@
+**/target/**
+!**/src/**
+.metadata
+.settings
+.classpath
+.project
+.idea
+*.iml
