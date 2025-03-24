@@ -15,23 +15,11 @@
 	<packaging>pom</packaging>
 	<name>liga-internship</name>
 	<description>lesson2</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
+
 	<modules>
 		<module>dependency_bom</module>
 		<module>waiter-service</module>
 		<module>kitchen-service</module>
 	</modules>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
 
 </project>
