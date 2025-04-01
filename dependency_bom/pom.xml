@@ -21,6 +21,8 @@
         <spring.actuator.version>3.4.4</spring.actuator.version>
         <spring.web.version>3.4.4</spring.web.version>
         <lombok.version>1.18.36</lombok.version>
+        <spring.devtools.version>3.4.4</spring.devtools.version>
+        <jackson.datatype.jsr310.version>2.18.3</jackson.datatype.jsr310.version>
     </properties>
 
     <dependencyManagement>
@@ -36,7 +38,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring.web.version}</version>
-
             </dependency>
 
             <dependency>
@@ -44,6 +45,18 @@
                 <artifactId>lombok</artifactId>
                 <optional>true</optional>
                 <version>${lombok.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-devtools</artifactId>
+                <version>${spring.devtools.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson.datatype.jsr310.version}</version>
             </dependency>
 
         </dependencies>
@@ -54,8 +67,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
-
     </dependencies>
 
 
