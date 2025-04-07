@@ -1,0 +1,1 @@
+drop sequence waiter_account_sequence;

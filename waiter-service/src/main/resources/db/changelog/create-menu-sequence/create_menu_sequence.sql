@@ -1,0 +1,1 @@
+create sequence menu_sequence;

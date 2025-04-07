@@ -1,0 +1,1 @@
+drop sequence kitchen_order_sequence;

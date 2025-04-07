@@ -1,0 +1,1 @@
+drop sequence waiter_order_sequence;

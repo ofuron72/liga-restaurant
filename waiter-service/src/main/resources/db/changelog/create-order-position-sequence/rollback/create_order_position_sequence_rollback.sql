@@ -1,0 +1,1 @@
+drop sequence order_position_sequence;

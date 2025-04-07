@@ -1,0 +1,1 @@
+create sequence dish_sequence;
