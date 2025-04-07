@@ -1,0 +1,1 @@
+create sequence order_position_sequence;

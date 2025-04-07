@@ -1,0 +1,1 @@
+drop sequence dish_sequence;

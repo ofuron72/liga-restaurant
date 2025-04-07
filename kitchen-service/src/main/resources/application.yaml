@@ -1,2 +1,12 @@
 server:
   port: 8080
+
+spring:
+  liquibase:
+    change-log: classpath:db/master.xml
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kitchen-service
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="2025-06-04 11:56:00" author="denis">
+        <sqlFile path="create-waiter-account-sequence/create_waiter_account_sequence.sql"
+                 relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="create-waiter-account-sequence/rollback/create_waiter_account_sequence_rollback.sql"
+                     relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,1 @@
+create sequence payment_sequence;

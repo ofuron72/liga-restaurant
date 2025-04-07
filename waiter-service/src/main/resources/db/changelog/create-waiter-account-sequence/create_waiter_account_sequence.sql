@@ -1,0 +1,1 @@
+create sequence waiter_account_sequence;
