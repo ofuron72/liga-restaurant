@@ -1,16 +1,16 @@
 package com.liga.service;
 
-import com.liga.dto.OrderDto;
-import com.liga.dto.OrderStatusDto;
+import com.liga.dto.WaiterOrderDto;
+import com.liga.dto.WaiterOrderStatusDto;
 
 import java.util.List;
 
 public interface WaiterService {
-    OrderDto getOrderById(Long id);
+    WaiterOrderDto getOrderById(Long id);
 
-    List<OrderDto> getAllOrders();
+    List<WaiterOrderDto> getAllOrders();
 
-    void createOrder(OrderDto order);
+    void createOrder(WaiterOrderDto order);
 
-    OrderStatusDto getOrderStatus(Long id);
+    WaiterOrderStatusDto getOrderStatus(Long id);
 }

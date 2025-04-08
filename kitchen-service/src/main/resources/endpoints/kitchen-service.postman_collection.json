@@ -1,64 +1,142 @@
 {
-  "info": {
-    "_postman_id": "3e6eda67-e80a-4405-afe2-7e5ea3d98d2b",
-    "name": "kitchen-service",
-    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-    "_exporter_id": "38936401"
-  },
-  "item": [
-    {
-      "name": "get all orders",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": "http://localhost:8080/api/kitchen/orders"
-      },
-      "response": []
-    },
-    {
-      "name": "set status accept",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "url": "http://localhost:8080/api/kitchen/orders/1/setAccess"
-      },
-      "response": []
-    },
-    {
-      "name": "set status reject",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "url": "http://localhost:8080/api/kitchen/orders/1/setReject"
-      },
-      "response": []
-    },
-    {
-      "name": "set status ready",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "url": "http://localhost:8080/api/kitchen/orders/1/setReady"
-      },
-      "response": []
-    },
-    {
-      "name": "create order",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"description\": \"Cola\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": "http://localhost:8080/api/kitchen/orders"
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "3e6eda67-e80a-4405-afe2-7e5ea3d98d2b",
+		"name": "kitchen-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38936401"
+	},
+	"item": [
+		{
+			"name": "get all orders",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/kitchen/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"kitchen",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "set status accept",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/kitchen/orders/7/setAccess",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"kitchen",
+						"orders",
+						"7",
+						"setAccess"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "set status reject",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/kitchen/orders/7/setReject",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"kitchen",
+						"orders",
+						"7",
+						"setReject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "set status ready",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/kitchen/orders/7/setReady",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"kitchen",
+						"orders",
+						"7",
+						"setReady"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"waiterOrderNo\":3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/kitchen/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"kitchen",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		}
+	]
 }

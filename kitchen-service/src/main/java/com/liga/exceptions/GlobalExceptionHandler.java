@@ -12,4 +12,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(InvalidOrderException.class)
+    public ResponseEntity<?> handleInvalidOrderException(InvalidOrderException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 }

@@ -1,34 +1,22 @@
 package com.liga.repository;
 
-import com.liga.dto.OrderDto;
-import com.liga.exceptions.OrderNotFoundException;
+import com.liga.entities.KitchenOrder;
 import com.liga.objects.KitchenStatus;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class KitchenRepository {
-    private final Map<Long, OrderDto> orders = new HashMap<Long, OrderDto>();
+public interface KitchenRepository extends JpaRepository<KitchenOrder, Long> {
 
-    public List<OrderDto> getAllOrders() {
-        return new ArrayList<OrderDto>(orders.values());
-    }
-
-    public void setStatus(Long id, KitchenStatus status) {
-        Optional.ofNullable(orders.get(id))
-                .orElseThrow(() -> new OrderNotFoundException(String.format("Order with id %s not found", id)))
-                .setStatus(status);
-    }
-
-    public void createOrder(OrderDto orderDto) {
-        orderDto.setId((long) (orders.size() + 1));
-        orders.put(orderDto.getId(), orderDto);
-    }
-
-
+    @Modifying
+    @Transactional
+    @Query("UPDATE KitchenOrder k SET k.status = :status WHERE k.id = :id")
+    void updateStatusById(@Param("id") Long id, @Param("status") KitchenStatus status);
 }
+
+
+

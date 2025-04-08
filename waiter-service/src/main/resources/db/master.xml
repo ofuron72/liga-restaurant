@@ -14,4 +14,5 @@
     <include file="changelog/008_create_sequence_waiter_order.xml" relativeToChangelogFile="true"/>
     <include file="changelog/009_create_sequence_payment.xml" relativeToChangelogFile="true"/>
     <include file="changelog/010_create_sequence_order_position.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/011_insert_values.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -16,4 +16,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleStatusNotFound(StatusNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(InvalidOrderException.class)
+    public ResponseEntity<?> handleInvalidOrder(InvalidOrderException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
