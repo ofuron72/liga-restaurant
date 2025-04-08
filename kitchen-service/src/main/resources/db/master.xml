@@ -10,4 +10,5 @@
     <include file="changelog/004_create_sequence_dish.xml" relativeToChangelogFile="true"/>
     <include file="changelog/005_create_sequence_kitchen_order.xml" relativeToChangelogFile="true"/>
     <include file="changelog/006_create_sequence_order_to_dish.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/007_insert_values.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

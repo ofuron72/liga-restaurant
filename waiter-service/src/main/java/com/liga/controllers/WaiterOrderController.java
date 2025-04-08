@@ -1,8 +1,9 @@
 package com.liga.controllers;
 
-import com.liga.dto.OrderDto;
-import com.liga.dto.OrderStatusDto;
+import com.liga.dto.WaiterOrderDto;
+import com.liga.dto.WaiterOrderStatusDto;
 import com.liga.service.WaiterService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,27 +18,27 @@ public class WaiterOrderController {
     private final WaiterService waiterService;
 
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody OrderDto orderDto) {
-        waiterService.createOrder(orderDto);
+    public ResponseEntity<Void> createOrder(@RequestBody @Valid WaiterOrderDto waiterOrderDto) {
+        waiterService.createOrder(waiterOrderDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllOrders() {
-        List<OrderDto> ordersDto = waiterService.getAllOrders();
+    public ResponseEntity<List<WaiterOrderDto>> getAllOrders() {
+        List<WaiterOrderDto> ordersDto = waiterService.getAllOrders();
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOrderById(@PathVariable Long id) {
-        OrderDto orderDto = waiterService.getOrderById(id);
-        return new ResponseEntity<>(orderDto, HttpStatus.OK);
+    public ResponseEntity<WaiterOrderDto> getOrderById(@PathVariable Long id) {
+        WaiterOrderDto waiterOrderDto = waiterService.getOrderById(id);
+        return new ResponseEntity<>(waiterOrderDto, HttpStatus.OK);
     }
 
     @GetMapping("/status/{id}")
-    public ResponseEntity<?> getOrderStatusById(@PathVariable Long id) {
-        OrderStatusDto orderStatusDto = waiterService.getOrderStatus(id);
-        return new ResponseEntity<>(orderStatusDto, HttpStatus.OK);
+    public ResponseEntity<WaiterOrderStatusDto> getOrderStatusById(@PathVariable Long id) {
+        WaiterOrderStatusDto waiterOrderStatusDto = waiterService.getOrderStatus(id);
+        return new ResponseEntity<>(waiterOrderStatusDto, HttpStatus.OK);
 
     }
 

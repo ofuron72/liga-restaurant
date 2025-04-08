@@ -1,12 +1,11 @@
 package com.liga.service;
 
 
-import com.liga.dto.OrderDto;
-
+import com.liga.dto.KitchenOrderDto;
 import java.util.List;
 
 public interface KitchenService {
-    List<OrderDto> getAllOrders();
+    List<KitchenOrderDto> getAllOrders();
 
     void acceptOrder(Long orderId);
 
@@ -14,7 +13,7 @@ public interface KitchenService {
 
     void setStatusReady(Long orderId);
 
-    void createOrder(OrderDto order);
+    void createOrder(KitchenOrderDto order);
 
 
 }

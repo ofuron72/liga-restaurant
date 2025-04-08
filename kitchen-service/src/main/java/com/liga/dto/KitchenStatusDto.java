@@ -1,5 +1,6 @@
 package com.liga.dto;
 
+import com.liga.objects.KitchenStatus;
 import lombok.Setter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,5 +13,5 @@ import lombok.ToString;
 @Setter
 @ToString
 public class KitchenStatusDto {
-    private String message;
+    private KitchenStatus kitchenStatus;
 }

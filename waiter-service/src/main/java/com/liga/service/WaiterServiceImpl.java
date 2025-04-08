@@ -1,39 +1,47 @@
 package com.liga.service;
 
-import com.liga.dto.OrderDto;
-import com.liga.dto.OrderStatusDto;
+import com.liga.dto.WaiterOrderDto;
+import com.liga.dto.WaiterOrderStatusDto;
 import com.liga.exceptions.OrderNotFoundException;
-import com.liga.repository.WaiterRepository;
+import com.liga.exceptions.StatusNotFoundException;
+import com.liga.objects.OrderStatus;
+import com.liga.repository.WaiterOrderMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class WaiterServiceImpl implements WaiterService {
 
-    private final WaiterRepository waiterRepository;
+    private final WaiterOrderMapper waiterOrderMapper;
 
     @Override
-    public OrderDto getOrderById(Long id) {
-        return waiterRepository.getOrderById(id);
+    public WaiterOrderDto getOrderById(Long id) {
+        return Optional
+                .ofNullable(waiterOrderMapper.getById(id))
+                .orElseThrow(() -> new OrderNotFoundException(String.format("Order with id %s not found", id)));
     }
 
     @Override
-    public List<OrderDto> getAllOrders() {
-        return waiterRepository.getAllOrders();
+    public List<WaiterOrderDto> getAllOrders() {
+        return waiterOrderMapper.getAll();
     }
 
     @Override
-    public void createOrder(OrderDto order) {
-        order.setOrderTime(LocalDateTime.now());
-        waiterRepository.create(order);
+    public void createOrder(WaiterOrderDto order) {
+        order.setStatus(OrderStatus.ACCEPTED);
+        order.setCreateDttm(OffsetDateTime.now());
+        waiterOrderMapper.create(order);
     }
 
     @Override
-    public OrderStatusDto getOrderStatus(Long id) {
-        return waiterRepository.getOrderStatus(id);
+    public WaiterOrderStatusDto getOrderStatus(Long id) {
+        return Optional
+                .ofNullable(waiterOrderMapper.getOrderStatus(id))
+                .orElseThrow(() -> new StatusNotFoundException(String.format("Status for order with id %s not found", id)));
     }
 }

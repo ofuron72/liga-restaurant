@@ -1,8 +1,9 @@
 package com.liga.controllers;
 
-import com.liga.dto.KitchenStatusDto;
-import com.liga.dto.OrderDto;
+import com.liga.dto.KitchenOrderDto;
+import com.liga.dto.ResponseDto;
 import com.liga.service.KitchenService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,37 +18,37 @@ public class KitchenOrderController {
     private final KitchenService kitchenService;
 
     @GetMapping
-    public ResponseEntity<?> getAllOrders() {
-        List<OrderDto> orders = kitchenService.getAllOrders();
+    public ResponseEntity<List<KitchenOrderDto>> getAllOrders() {
+        List<KitchenOrderDto> orders = kitchenService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
     @PostMapping("/{id}/setAccess")
-    public ResponseEntity<?> setAccessStatus(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto> setAccessStatus(@PathVariable Long id) {
         kitchenService.acceptOrder(id);
-        return new ResponseEntity<>(new KitchenStatusDto(String
+        return new ResponseEntity<>(new ResponseDto(String
                 .format("status order with id: %d changed -> ACCESS", id))
                 , HttpStatus.OK);
     }
 
     @PostMapping("/{id}/setReady")
-    public ResponseEntity<?> setReadyStatus(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto> setReadyStatus(@PathVariable Long id) {
         kitchenService.setStatusReady(id);
-        return new ResponseEntity<>(new KitchenStatusDto(String
+        return new ResponseEntity<>(new ResponseDto(String
                 .format("status order with id: %d changed -> READY", id))
                 , HttpStatus.OK);
     }
 
     @PostMapping("/{id}/setReject")
-    public ResponseEntity<?> setRejectStatus(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto> setRejectStatus(@PathVariable Long id) {
         kitchenService.rejectOrder(id);
-        return new ResponseEntity<>(new KitchenStatusDto(String
+        return new ResponseEntity<>(new ResponseDto(String
                 .format("status order with id: %d changed -> REJECT", id)), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody OrderDto orderDto) {
-        kitchenService.createOrder(orderDto);
+    public ResponseEntity<Void> createOrder(@RequestBody @Valid KitchenOrderDto kitchenOrderDto) {
+        kitchenService.createOrder(kitchenOrderDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

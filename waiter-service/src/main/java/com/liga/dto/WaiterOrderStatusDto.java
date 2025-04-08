@@ -12,6 +12,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class OrderStatusDto {
+public class WaiterOrderStatusDto {
     OrderStatus status;
 }
