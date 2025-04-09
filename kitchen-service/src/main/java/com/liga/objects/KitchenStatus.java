@@ -4,5 +4,5 @@ public enum KitchenStatus {
     ACCEPTED,
     REJECTED,
     CREATED,
-    READY,
+    COOKED,
 }

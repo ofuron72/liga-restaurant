@@ -1,0 +1,13 @@
+package com.liga.feign;
+
+import com.liga.dto.WaiterOrderRequestDto;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+@FeignClient(value = "waiter-service", url = "localhost:8081")
+public interface WaiterFeignClient {
+    @PostMapping("/integration-api/orders/cooked")
+    ResponseEntity<Void> sendCookedOrderToWaiter(@RequestBody WaiterOrderRequestDto waiterOrderRequestDto);
+}

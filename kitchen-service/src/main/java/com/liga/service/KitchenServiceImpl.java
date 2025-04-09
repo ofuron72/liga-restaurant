@@ -53,6 +53,8 @@ public class KitchenServiceImpl implements KitchenService {
         if (!kitchenRepository.existsById(orderId)) {
             throw new OrderNotFoundException(String.format("Order with id %s not found", orderId));
         }
-        kitchenRepository.updateStatusById(orderId, KitchenStatus.READY);
+        kitchenRepository.updateStatusById(orderId, KitchenStatus.COOKED);
+
+
     }
 }

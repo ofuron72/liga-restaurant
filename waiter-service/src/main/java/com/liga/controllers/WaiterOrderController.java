@@ -3,6 +3,7 @@ package com.liga.controllers;
 import com.liga.dto.WaiterOrderDto;
 import com.liga.dto.WaiterOrderStatusDto;
 import com.liga.service.WaiterService;
+import com.liga.service.facade.WaiterOrderFacade;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,10 +17,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WaiterOrderController {
     private final WaiterService waiterService;
+    private final WaiterOrderFacade waiterOrderFacade;
 
     @PostMapping
     public ResponseEntity<Void> createOrder(@RequestBody @Valid WaiterOrderDto waiterOrderDto) {
-        waiterService.createOrder(waiterOrderDto);
+        waiterOrderFacade.saveAndSend(waiterOrderDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
