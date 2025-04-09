@@ -1,9 +1,11 @@
 package com.liga.service;
 
+import com.liga.dto.KitchenOrderRequestDto;
 import com.liga.dto.WaiterOrderDto;
 import com.liga.dto.WaiterOrderStatusDto;
 import com.liga.exceptions.OrderNotFoundException;
 import com.liga.exceptions.StatusNotFoundException;
+import com.liga.integration.feign.KitchenFeignClient;
 import com.liga.objects.OrderStatus;
 import com.liga.repository.WaiterOrderMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,8 @@ import java.util.Optional;
 public class WaiterServiceImpl implements WaiterService {
 
     private final WaiterOrderMapper waiterOrderMapper;
+    private final KitchenFeignClient kitchenFeignClient;
+
 
     @Override
     public WaiterOrderDto getOrderById(Long id) {
