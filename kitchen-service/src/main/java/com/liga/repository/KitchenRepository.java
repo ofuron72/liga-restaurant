@@ -16,6 +16,7 @@ public interface KitchenRepository extends JpaRepository<KitchenOrder, Long> {
     @Transactional
     @Query("UPDATE KitchenOrder k SET k.status = :status WHERE k.id = :id")
     void updateStatusById(@Param("id") Long id, @Param("status") KitchenStatus status);
+
 }
 
 

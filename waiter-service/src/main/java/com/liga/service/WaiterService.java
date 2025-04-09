@@ -10,7 +10,9 @@ public interface WaiterService {
 
     List<WaiterOrderDto> getAllOrders();
 
-    void createOrder(WaiterOrderDto order);
+    WaiterOrderDto createOrder(WaiterOrderDto order);
 
     WaiterOrderStatusDto getOrderStatus(Long id);
+
+    void serveOrder(WaiterOrderDto order);
 }

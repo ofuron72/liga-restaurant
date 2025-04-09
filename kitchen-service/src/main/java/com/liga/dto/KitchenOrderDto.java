@@ -21,4 +21,6 @@ public class KitchenOrderDto {
     private Long waiterOrderNo;
 
     private KitchenStatus status;
+
+    private Long orderIdInWaiterService;
 }

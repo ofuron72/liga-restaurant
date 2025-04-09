@@ -1,6 +1,5 @@
 package com.liga.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.liga.objects.KitchenStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "kitchen_order")
-
 public class KitchenOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "kitchen_order_seq")
@@ -41,4 +39,6 @@ public class KitchenOrder {
     @OneToMany(mappedBy = "order")
     private List<OrderToDish> orderDishes = new ArrayList<>();
 
+    @Column(name="order_id_in_waiter_service")
+    private Long orderIdInWaiterService;
 }

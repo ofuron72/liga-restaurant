@@ -1,0 +1,2 @@
+ALTER TABLE kitchen_order
+ADD COLUMN order_id_in_waiter_service bigint;

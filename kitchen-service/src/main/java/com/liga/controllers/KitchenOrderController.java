@@ -3,6 +3,7 @@ package com.liga.controllers;
 import com.liga.dto.KitchenOrderDto;
 import com.liga.dto.ResponseDto;
 import com.liga.service.KitchenService;
+import com.liga.service.facade.KitchenOrderFacade;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KitchenOrderController {
     private final KitchenService kitchenService;
+    private final KitchenOrderFacade kitchenOrderFacade;
 
     @GetMapping
     public ResponseEntity<List<KitchenOrderDto>> getAllOrders() {
@@ -33,7 +35,8 @@ public class KitchenOrderController {
 
     @PostMapping("/{id}/setReady")
     public ResponseEntity<ResponseDto> setReadyStatus(@PathVariable Long id) {
-        kitchenService.setStatusReady(id);
+
+        kitchenOrderFacade.setCookedAndSendOrder(id);
         return new ResponseEntity<>(new ResponseDto(String
                 .format("status order with id: %d changed -> READY", id))
                 , HttpStatus.OK);

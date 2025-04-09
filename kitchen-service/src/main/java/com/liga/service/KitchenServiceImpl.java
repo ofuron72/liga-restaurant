@@ -49,12 +49,15 @@ public class KitchenServiceImpl implements KitchenService {
     }
 
     @Override
-    public void setStatusReady(Long orderId) {
+    public void setStatusCooked(Long orderId) {
         if (!kitchenRepository.existsById(orderId)) {
             throw new OrderNotFoundException(String.format("Order with id %s not found", orderId));
         }
         kitchenRepository.updateStatusById(orderId, KitchenStatus.COOKED);
+    }
 
-
+    public KitchenOrderDto getOrderById(Long orderId) {
+        return kitchenOrderMapper.toDto(kitchenRepository.findById(orderId)
+                .orElseThrow(()-> new OrderNotFoundException(String.format("Order with id %s not found", orderId))));
     }
 }

@@ -1,4 +1,8 @@
 package com.liga.dto;
 
-public class WaiterOrderRequestDto {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record WaiterOrderRequestDto(
+        @JsonProperty("waiterId") Long waiterId,
+        @JsonProperty("id") Long orderIdInWaiterService) {
 }
