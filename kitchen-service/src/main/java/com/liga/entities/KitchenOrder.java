@@ -1,5 +1,6 @@
 package com.liga.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.liga.objects.KitchenStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

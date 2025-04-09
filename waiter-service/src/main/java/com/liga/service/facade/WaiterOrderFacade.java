@@ -14,9 +14,11 @@ public class WaiterOrderFacade {
     private final WaiterService waiterService;
 
     public void saveAndSend(WaiterOrderDto waiterOrderDto) {
-        KitchenOrderRequestDto kitchenOrderRequestDto = new KitchenOrderRequestDto(waiterOrderDto.getWaiterId());
 
-        waiterService.createOrder(waiterOrderDto);
+
+        WaiterOrderDto waiterOrderDtoWithId = waiterService.createOrder(waiterOrderDto);
+        KitchenOrderRequestDto kitchenOrderRequestDto =
+                new KitchenOrderRequestDto(waiterOrderDto.getWaiterId(), waiterOrderDtoWithId.getId());
 
         kitchenFeignClient.sendOrderToKitchen(kitchenOrderRequestDto);
     }
