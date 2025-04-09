@@ -22,5 +22,5 @@ public class KitchenOrderDto {
 
     private KitchenStatus status;
 
-    private Long orderIdInWaiterService;
+    private Long orderIdWaiterService;
 }

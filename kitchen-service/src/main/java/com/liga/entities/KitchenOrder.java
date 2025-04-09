@@ -40,5 +40,5 @@ public class KitchenOrder {
     private List<OrderToDish> orderDishes = new ArrayList<>();
 
     @Column(name="order_id_in_waiter_service")
-    private Long orderIdInWaiterService;
+    private Long orderIdWaiterService;
 }

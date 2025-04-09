@@ -1,4 +1,4 @@
-package com.liga.service.facade;
+package com.liga.service.orchestrator;
 
 import com.liga.dto.KitchenOrderDto;
 import com.liga.dto.WaiterOrderRequestDto;
@@ -9,13 +9,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class KitchenOrderFacade {
+public class KitchenOrderOrchestrator {
 
     private final WaiterFeignClient waiterFeignClient;
     private final KitchenService kitchenService;
 
     public void setCookedAndSendOrder(Long orderId){
-        kitchenService.setStatusCooked(orderId);
 
         KitchenOrderDto kitchenOrderDto = kitchenService.getOrderById(orderId);
 

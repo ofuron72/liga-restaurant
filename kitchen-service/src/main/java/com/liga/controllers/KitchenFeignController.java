@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class KitchenFeignController {
     private final KitchenService kitchenService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> receiveOrderFromWaiter(@RequestBody KitchenOrderDto orderDto) {
         kitchenService.createOrder(orderDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
