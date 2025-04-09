@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(value = "kitchen-service", url = "localhost:8080")
+@FeignClient(value = "kitchen-service", url = "${spring.cloud.openfeign.client.config.kitchen-service.url}")
 public interface KitchenFeignClient {
 
     @PostMapping("/integration-api/orders")
