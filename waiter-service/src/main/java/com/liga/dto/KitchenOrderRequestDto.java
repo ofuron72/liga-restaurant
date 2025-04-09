@@ -4,5 +4,5 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record KitchenOrderRequestDto(
         @JsonProperty("waiterOrderNo") Long waiterOrderNo,
-        @JsonProperty("orderIdInWaiterService")Long orderIdInWaiterService ) {
+        @JsonProperty("orderIdWaiterService") Long orderIdWaiterService) {
 }

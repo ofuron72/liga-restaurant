@@ -19,8 +19,6 @@ public class WaiterServiceImpl implements WaiterService {
 
     private final WaiterOrderMapper waiterOrderMapper;
 
-
-
     @Override
     public WaiterOrderDto getOrderById(Long id) {
         return Optional
@@ -35,10 +33,13 @@ public class WaiterServiceImpl implements WaiterService {
 
     @Override
     public WaiterOrderDto createOrder(WaiterOrderDto order) {
+
         order.setStatus(OrderStatus.ACCEPTED);
+
         order.setCreateDttm(OffsetDateTime.now());
 
         waiterOrderMapper.create(order);
+
         return order;
     }
 
