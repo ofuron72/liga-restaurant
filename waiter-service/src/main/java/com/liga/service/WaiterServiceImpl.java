@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class WaiterServiceImpl implements WaiterService {
     }
 
     @Override
-    public List<WaiterOrderDto> getAllOrders() {
+    public Set<WaiterOrderDto> getAllOrders() {
         return waiterOrderMapper.getAll();
     }
 

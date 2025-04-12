@@ -7,16 +7,18 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Entity
 @Table(name = "kitchen_order")
 public class KitchenOrder {
@@ -38,7 +40,7 @@ public class KitchenOrder {
     private ZonedDateTime createDttm;
 
     @OneToMany(mappedBy = "order")
-    private List<OrderToDish> orderDishes = new ArrayList<>();
+    private Set<OrderToDish> orderDishes = new HashSet<>();
 
     @Column(name="order_id_in_waiter_service")
     private Long orderIdWaiterService;

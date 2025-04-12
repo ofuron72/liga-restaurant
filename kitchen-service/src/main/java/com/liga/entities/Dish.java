@@ -6,9 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.EqualsAndHashCode;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "dish")
@@ -16,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +34,6 @@ public class Dish {
     private String dishComposition;
 
     @OneToMany(mappedBy = "dish")
-    @JsonIgnore
-    private List<OrderToDish> orderDishes = new ArrayList<>();
+    @JsonIgnore  //toDo
+    private Set<OrderToDish> orderDishes = new HashSet<>();
 }

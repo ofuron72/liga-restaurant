@@ -1,21 +1,23 @@
 package com.liga.dto;
 
 import com.liga.objects.OrderStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.validation.constraints.NotNull;
 import lombok.Setter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
+import lombok.EqualsAndHashCode;
 
 import java.time.OffsetDateTime;
+
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class WaiterOrderDto {
     private Long id;
 
@@ -23,9 +25,9 @@ public class WaiterOrderDto {
 
     private OffsetDateTime createDttm;
 
-    @NotNull(message = "waiterId must not be null")
     private Long waiterId;
 
-    @NotNull(message = "tableNo must not be null")
     private String tableNo;
+
+    private Set<DishSendDto> dishes;
 }

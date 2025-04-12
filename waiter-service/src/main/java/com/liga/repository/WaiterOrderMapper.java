@@ -7,13 +7,14 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper
 @Repository
 public interface WaiterOrderMapper {
     WaiterOrderDto getById(@Param("id") Long id);
 
-    List<WaiterOrderDto> getAll();
+    Set<WaiterOrderDto> getAll();
 
     void create(WaiterOrderDto order);
 

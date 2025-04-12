@@ -1,6 +1,6 @@
 package com.liga.service.orchestrator;
 
-import com.liga.dto.KitchenOrderRequestDto;
+import com.liga.dto.KitchenOrderSendDto;
 import com.liga.dto.WaiterOrderDto;
 import com.liga.exceptions.SendOrderFeignException;
 import com.liga.integration.feign.KitchenFeignClient;
@@ -20,8 +20,10 @@ public class WaiterOrderOrchestrator {
     public void saveAndSend(WaiterOrderDto waiterOrderDto) {
         WaiterOrderDto waiterOrderDtoWithId = waiterService.createOrder(waiterOrderDto);
 
-        KitchenOrderRequestDto kitchenOrderRequestDto =
-                new KitchenOrderRequestDto(waiterOrderDto.getWaiterId(), waiterOrderDtoWithId.getId());
+        KitchenOrderSendDto kitchenOrderSendDto =
+                new KitchenOrderSendDto(waiterOrderDto.getWaiterId(),
+                        waiterOrderDtoWithId.getId(),
+                        waiterOrderDtoWithId.getDishes());
 
         try {
             kitchenFeignClient.sendOrderToKitchen(kitchenOrderRequestDto);

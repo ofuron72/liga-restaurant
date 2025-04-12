@@ -4,13 +4,12 @@ import com.liga.dto.KitchenOrderDto;
 import com.liga.dto.ResponseDto;
 import com.liga.service.KitchenService;
 import com.liga.service.orchestrator.KitchenOrderOrchestrator;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/kitchen/orders")
@@ -20,8 +19,8 @@ public class KitchenOrderController {
     private final KitchenOrderOrchestrator kitchenOrderOrchestrator;
 
     @GetMapping
-    public ResponseEntity<List<KitchenOrderDto>> getAllOrders() {
-        List<KitchenOrderDto> orders = kitchenService.getAllOrders();
+    public ResponseEntity<Set<KitchenOrderDto>> getAllOrders() {
+        Set<KitchenOrderDto> orders = kitchenService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
@@ -49,11 +48,6 @@ public class KitchenOrderController {
                 .format("status order with id: %d changed -> REJECT", id)), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Void> createOrder(@RequestBody @Valid KitchenOrderDto kitchenOrderDto) {
-        kitchenService.createOrder(kitchenOrderDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
 
     @PostMapping("/receive")
     public ResponseEntity<Void> receiveOrderFromWaiter(@RequestBody KitchenOrderDto orderDto) {
