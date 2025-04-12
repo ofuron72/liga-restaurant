@@ -7,12 +7,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
+import lombok.EqualsAndHashCode;
+
+import java.util.Set;
 
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class KitchenOrderDto {
 
     private Long id;
@@ -23,4 +27,6 @@ public class KitchenOrderDto {
     private KitchenStatus status;
 
     private Long orderIdWaiterService;
+
+    private Set<DishDto> dishes;
 }

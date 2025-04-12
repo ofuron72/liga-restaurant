@@ -3,9 +3,10 @@ package com.liga.service;
 
 import com.liga.dto.KitchenOrderDto;
 import java.util.List;
+import java.util.Set;
 
 public interface KitchenService {
-    List<KitchenOrderDto> getAllOrders();
+    Set<KitchenOrderDto> getAllOrders();
 
     void acceptOrder(Long orderId);
 
@@ -16,6 +17,10 @@ public interface KitchenService {
     void createOrder(KitchenOrderDto order);
 
     KitchenOrderDto getOrderById(Long orderId);
+
+    Boolean dishesIsAvailable(KitchenOrderDto order);
+
+    void createOrderToDish(KitchenOrderDto order);
 
 
 }

@@ -1,5 +1,7 @@
 package com.liga.controllers;
 
+import com.liga.converter.WaiterOrderDtoMapper;
+import com.liga.dto.WaiterOrderCreateRequestDto;
 import com.liga.dto.WaiterOrderDto;
 import com.liga.dto.WaiterOrderStatusDto;
 import com.liga.service.WaiterService;
@@ -10,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/waiter/orders")
@@ -18,16 +20,22 @@ import java.util.List;
 public class WaiterOrderController {
     private final WaiterService waiterService;
     private final WaiterOrderOrchestrator waiterOrderOrchestrator;
+    private final WaiterOrderDtoMapper waiterOrderDtoMapper;
 
     @PostMapping
-    public ResponseEntity<Void> createOrder(@RequestBody @Valid WaiterOrderDto waiterOrderDto) {
-        waiterOrderOrchestrator.saveAndSend(waiterOrderDto);
+    public ResponseEntity<Void> createOrder(@RequestBody @Valid WaiterOrderCreateRequestDto waiterOrderDto) {
+        System.out.println(waiterOrderDto);
+        System.out.println(waiterOrderDtoMapper
+                .toWaiterOrderDto(waiterOrderDto));
+        waiterOrderOrchestrator.saveAndSend(waiterOrderDtoMapper
+                .toWaiterOrderDto(waiterOrderDto));
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<WaiterOrderDto>> getAllOrders() {
-        List<WaiterOrderDto> ordersDto = waiterService.getAllOrders();
+    public ResponseEntity<Set<WaiterOrderDto>> getAllOrders() {
+        Set<WaiterOrderDto> ordersDto = waiterService.getAllOrders();
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
 

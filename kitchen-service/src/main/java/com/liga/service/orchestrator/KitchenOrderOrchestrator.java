@@ -1,7 +1,7 @@
 package com.liga.service.orchestrator;
 
 import com.liga.dto.KitchenOrderDto;
-import com.liga.dto.WaiterOrderRequestDto;
+import com.liga.dto.WaiterOrderSendDto;
 import com.liga.feign.WaiterFeignClient;
 import com.liga.service.KitchenService;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +18,13 @@ public class KitchenOrderOrchestrator {
 
         KitchenOrderDto kitchenOrderDto = kitchenService.getOrderById(orderId);
 
-        WaiterOrderRequestDto orderForWaiterService = new WaiterOrderRequestDto(kitchenOrderDto.getWaiterOrderNo(),
-                kitchenOrderDto.getId());
+        WaiterOrderSendDto orderForWaiterService = new WaiterOrderSendDto(kitchenOrderDto.getWaiterOrderNo(),
+                kitchenOrderDto.getId(), kitchenOrderDto.getDishes());
 
         kitchenService.setStatusCooked(orderId);
 
         waiterFeignClient.sendCookedOrderToWaiter(orderForWaiterService);
     }
+
 
 }

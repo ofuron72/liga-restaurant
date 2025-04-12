@@ -9,13 +9,20 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Repository
-public interface KitchenRepository extends JpaRepository<KitchenOrder, Long> {
+public interface KitchenOrderRepository extends JpaRepository<KitchenOrder, Long> {
 
     @Modifying
     @Transactional
     @Query("UPDATE KitchenOrder k SET k.status = :status WHERE k.id = :id")
     void updateStatusById(@Param("id") Long id, @Param("status") KitchenStatus status);
+
+    @Query("select distinct o from KitchenOrder o")
+    Set<KitchenOrder> findAllDistinct();
+
+
 
 }
 
