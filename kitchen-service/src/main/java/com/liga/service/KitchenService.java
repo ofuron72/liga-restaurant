@@ -3,7 +3,7 @@ package com.liga.service;
 
 import com.liga.dto.DishDto;
 import com.liga.dto.KitchenOrderDto;
-import java.util.List;
+
 import java.util.Set;
 
 public interface KitchenService {
@@ -13,7 +13,7 @@ public interface KitchenService {
 
     void rejectOrder(Long orderId);
 
-    void setStatusCooked(Long orderId);
+    void setStatusReady(Long orderId);
 
     void createOrder(KitchenOrderDto order);
 

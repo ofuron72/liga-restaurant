@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(value = "kitchen-service", url = "${spring.cloud.openfeign.client.config.kitchen-service.url}")
 public interface KitchenFeignClient {
 
-    @PostMapping("/integration-api/orders")
-    ResponseEntity<Void> sendOrderToKitchen(@RequestBody KitchenOrderSendDto kitchenOrderSendDto);
+    @PostMapping("/api/kitchen/orders/receive")
+    ResponseEntity<Void> sendOrderToKitchen(@RequestBody KitchenOrderSendDto kitchenOrderRequestDto);
 }

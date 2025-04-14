@@ -1,32 +1,29 @@
 package com.liga.service;
-
 import com.liga.converter.KitchenDishMapper;
 import com.liga.converter.KitchenOrderDtoToWaiterOrderSendDtoMapper;
 import com.liga.converter.KitchenOrderMapper;
-import com.liga.converter.KitchenOrderToDishMapper;
 import com.liga.dto.DishDto;
 import com.liga.dto.KitchenOrderDto;
 import com.liga.dto.OrderToDishDto;
 import com.liga.entities.CompositeOrderToDishId;
 import com.liga.entities.KitchenOrder;
 import com.liga.entities.OrderToDish;
-import com.liga.exceptions.DishNotFoundException;
 import com.liga.exceptions.OrderNotFoundException;
 import com.liga.feign.WaiterFeignClient;
 import com.liga.objects.KitchenStatus;
 import com.liga.repository.KitchenDishRepository;
-import com.liga.repository.KitchenOrderRepository;
 import com.liga.repository.KitchenOrderToDishRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class KitchenServiceImpl implements KitchenService {
-    private final KitchenOrderRepository kitchenOrderRepository;
+    private final KitchenRepository kitchenRepository;
     private final KitchenOrderMapper kitchenOrderMapper;
     private final KitchenDishRepository kitchenDishRepository;
     private final KitchenDishMapper kitchenDishMapper;
@@ -36,7 +33,7 @@ public class KitchenServiceImpl implements KitchenService {
 
     @Override
     public Set<KitchenOrderDto> getAllOrders() {
-        Set<KitchenOrder> setEntities = kitchenOrderRepository.findAllDistinct();
+        List<KitchenOrder> setEntities = kitchenOrderRepository.findAllDistinct();
 
         return setEntities.stream()
                 .map(kitchenOrderMapper::toDto)
@@ -46,32 +43,21 @@ public class KitchenServiceImpl implements KitchenService {
     @Override
     public void createOrder(KitchenOrderDto order) {
         order.setStatus(KitchenStatus.CREATED);
-        System.out.println("KitchenService: createOrder before save" + order);
-
-        KitchenOrder order2 = kitchenOrderRepository.save(kitchenOrderMapper.toEntity(order));
-        System.out.println("KitchenService: createOrder after save" + order2);
-        if (dishesIsAvailable(order)) {
-            System.out.println("dishesIsAvailable");
-            acceptOrder(order.getOrderIdWaiterService());
-            createOrderToDish(order);
-        } else {
-            System.out.println("dishesIsNotAvailable");
-            rejectOrder(order.getOrderIdWaiterService());
-        }
-
+        kitchenRepository.save(kitchenOrderMapper.toEntity(order));
     }
 
     @Override
     public void acceptOrder(Long orderId) {
-        if (!kitchenOrderRepository.existsById(orderId)) {
+        if (!kitchenRepository.existsById(orderId)) {
             throw new OrderNotFoundException(String.format("Order with id %s not found", orderId));
         }
-        kitchenOrderRepository.updateStatusById(orderId, KitchenStatus.ACCEPTED);
+        kitchenRepository.updateStatusById(orderId, KitchenStatus.ACCEPTED);
+
     }
 
     @Override
     public void rejectOrder(Long orderId) {
-        if (!kitchenOrderRepository.existsById(orderId)) {
+        if (!kitchenRepository.existsById(orderId)) {
             throw new OrderNotFoundException(String.format("Order with id %s not found", orderId));
         }
         kitchenOrderRepository.updateStatusById(orderId, KitchenStatus.REJECTED);
@@ -80,8 +66,8 @@ public class KitchenServiceImpl implements KitchenService {
     }
 
     @Override
-    public void setStatusCooked(Long orderId) {
-        if (!kitchenOrderRepository.existsById(orderId)) {
+    public void setStatusReady(Long orderId) {
+        if (!kitchenRepository.existsById(orderId)) {
             throw new OrderNotFoundException(String.format("Order with id %s not found", orderId));
         }
         kitchenOrderRepository.updateStatusById(orderId, KitchenStatus.COOKED);

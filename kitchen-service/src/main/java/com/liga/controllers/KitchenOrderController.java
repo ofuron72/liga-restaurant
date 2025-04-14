@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -48,6 +49,17 @@ public class KitchenOrderController {
                 .format("status order with id: %d changed -> REJECT", id)), HttpStatus.OK);
     }
 
+    @PostMapping
+    public ResponseEntity<Void> createOrder(@RequestBody @Valid KitchenOrderDto kitchenOrderDto) {
+        kitchenService.createOrder(kitchenOrderDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/receive")
+    public ResponseEntity<Void> receiveOrderFromWaiter(@RequestBody KitchenOrderDto orderDto) {
+        kitchenService.createOrder(orderDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
 
 }
