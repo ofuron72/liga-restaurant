@@ -1,32 +1,33 @@
 package com.liga.service.orchestrator;
 
 import com.liga.converter.WaiterOrderDtoToKitchenSendDtoMapper;
-import com.liga.dto.KitchenOrderSendDto;
+import com.liga.dto.CreateOrderEvent;
 import com.liga.dto.WaiterOrderDto;
-import com.liga.exceptions.SendOrderFeignException;
-import com.liga.integration.feign.KitchenFeignClient;
 import com.liga.service.WaiterService;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class WaiterOrderOrchestrator {
-    private final KitchenFeignClient kitchenFeignClient;
+    private final KafkaTemplate<String, CreateOrderEvent> kafkaTemplate;
+
     private final WaiterService waiterService;
     private final WaiterOrderDtoToKitchenSendDtoMapper waiterOrderDtoToKitchenSendDtoMapper;
+    @Value("${kafka.topic.name}")
+    private String topicName;
 
     public void saveAndSend(WaiterOrderDto waiterOrderDto) {
         WaiterOrderDto waiterOrderDtoWithId = waiterService.createOrder(waiterOrderDto);
 
-        KitchenOrderSendDto kitchenOrderSendDto = waiterOrderDtoToKitchenSendDtoMapper.map(waiterOrderDtoWithId);
+        CreateOrderEvent createOrderEvent = waiterOrderDtoToKitchenSendDtoMapper.map(waiterOrderDtoWithId);
 
-        try {
-            kitchenFeignClient.sendOrderToKitchen(kitchenOrderSendDto);
-        } catch (FeignException e) {
-            throw new SendOrderFeignException("Failed sending order to the kitchen");
-        }
+        kafkaTemplate.send(topicName, createOrderEvent);
+
 
     }
 }

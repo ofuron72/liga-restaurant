@@ -1,15 +1,17 @@
 package com.liga.controllers;
 
+import com.liga.converter.KitchenOrderDtoMapper;
 import com.liga.dto.KitchenOrderDto;
+import com.liga.dto.CreateOrderEvent;
 import com.liga.dto.ResponseDto;
 import com.liga.service.KitchenService;
 import com.liga.service.orchestrator.KitchenOrderOrchestrator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -18,6 +20,7 @@ import java.util.Set;
 public class KitchenOrderController {
     private final KitchenService kitchenService;
     private final KitchenOrderOrchestrator kitchenOrderOrchestrator;
+    private final KitchenOrderDtoMapper kitchenOrderDtoMapper;
 
     @GetMapping
     public ResponseEntity<Set<KitchenOrderDto>> getAllOrders() {
@@ -55,11 +58,6 @@ public class KitchenOrderController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/receive")
-    public ResponseEntity<Void> receiveOrderFromWaiter(@RequestBody KitchenOrderDto orderDto) {
-        kitchenService.createOrder(orderDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
 
 
 }

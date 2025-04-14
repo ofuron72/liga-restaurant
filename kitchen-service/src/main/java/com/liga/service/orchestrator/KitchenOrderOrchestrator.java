@@ -27,7 +27,7 @@ public class KitchenOrderOrchestrator {
         WaiterOrderSendDto orderForWaiterService =
                 kitchenOrderDtoToWaiterOrderSendDtoMapper.map(kitchenOrderDto);
 
-        kitchenService.setStatusCooked(orderId);
+        kitchenService.setStatusReady(orderId);
 
         try {
             waiterFeignClient.sendCookedOrderToWaiter(orderForWaiterService);

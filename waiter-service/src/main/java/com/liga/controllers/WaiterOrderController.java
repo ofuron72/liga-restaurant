@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -52,9 +51,16 @@ public class WaiterOrderController {
         return new ResponseEntity<>(waiterOrderStatusDto, HttpStatus.OK);
     }
 
+
     @PostMapping("/cooked")
     public ResponseEntity<Void> receiveCookedOrderFromKitchen(@RequestBody WaiterOrderDto waiterOrderDto) {
         waiterService.serveOrder(waiterOrderDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/rejected")
+    public ResponseEntity<Void> receiveRejectedOrderFromKitchen(@RequestBody WaiterOrderDto waiterOrderDto) {
+        waiterService.cancelOrder(waiterOrderDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @Repository
-public interface KitchenRepository extends JpaRepository<KitchenOrder, Long> {
+public interface KitchenOrderRepository extends JpaRepository<KitchenOrder, Long> {
 
     @Modifying
     @Transactional
