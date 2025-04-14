@@ -20,7 +20,6 @@
 		<module>dependency_bom</module>
 		<module>waiter-service</module>
 		<module>kitchen-service</module>
-        <module>kafka-service</module>
     </modules>
 
 	<dependencies>
