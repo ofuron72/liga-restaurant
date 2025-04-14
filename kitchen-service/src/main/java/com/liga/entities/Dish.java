@@ -34,6 +34,5 @@ public class Dish {
     private String dishComposition;
 
     @OneToMany(mappedBy = "dish")
-    @JsonIgnore  //toDo
     private Set<OrderToDish> orderDishes = new HashSet<>();
 }

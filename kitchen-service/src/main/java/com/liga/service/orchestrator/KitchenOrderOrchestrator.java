@@ -1,5 +1,6 @@
 package com.liga.service.orchestrator;
 
+import com.liga.converter.KitchenOrderDtoToWaiterOrderSendDtoMapper;
 import com.liga.dto.KitchenOrderDto;
 import com.liga.dto.WaiterOrderSendDto;
 import com.liga.feign.WaiterFeignClient;
@@ -13,13 +14,14 @@ public class KitchenOrderOrchestrator {
 
     private final WaiterFeignClient waiterFeignClient;
     private final KitchenService kitchenService;
+    private final KitchenOrderDtoToWaiterOrderSendDtoMapper kitchenOrderDtoToWaiterOrderSendDtoMapper;
 
     public void setCookedAndSendOrder(Long orderId){
 
         KitchenOrderDto kitchenOrderDto = kitchenService.getOrderById(orderId);
 
-        WaiterOrderSendDto orderForWaiterService = new WaiterOrderSendDto(kitchenOrderDto.getWaiterOrderNo(),
-                kitchenOrderDto.getId(), kitchenOrderDto.getDishes());
+        WaiterOrderSendDto orderForWaiterService =
+                kitchenOrderDtoToWaiterOrderSendDtoMapper.map(kitchenOrderDto);
 
         kitchenService.setStatusCooked(orderId);
 

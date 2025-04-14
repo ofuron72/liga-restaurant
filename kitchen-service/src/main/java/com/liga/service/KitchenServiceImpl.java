@@ -1,14 +1,18 @@
 package com.liga.service;
 
 import com.liga.converter.KitchenDishMapper;
+import com.liga.converter.KitchenOrderDtoToWaiterOrderSendDtoMapper;
 import com.liga.converter.KitchenOrderMapper;
 import com.liga.converter.KitchenOrderToDishMapper;
 import com.liga.dto.DishDto;
 import com.liga.dto.KitchenOrderDto;
 import com.liga.dto.OrderToDishDto;
+import com.liga.entities.CompositeOrderToDishId;
 import com.liga.entities.KitchenOrder;
+import com.liga.entities.OrderToDish;
 import com.liga.exceptions.DishNotFoundException;
 import com.liga.exceptions.OrderNotFoundException;
+import com.liga.feign.WaiterFeignClient;
 import com.liga.objects.KitchenStatus;
 import com.liga.repository.KitchenDishRepository;
 import com.liga.repository.KitchenOrderRepository;
@@ -27,7 +31,8 @@ public class KitchenServiceImpl implements KitchenService {
     private final KitchenDishRepository kitchenDishRepository;
     private final KitchenDishMapper kitchenDishMapper;
     private final KitchenOrderToDishRepository kitchenOrderToDishRepository;
-    private final KitchenOrderToDishMapper kitchenOrderToDishMapper;
+    private final KitchenOrderDtoToWaiterOrderSendDtoMapper kitchenOrderDtoToWaiterOrderSendDtoMapper;
+    private final WaiterFeignClient waiterFeignClient;
 
     @Override
     public Set<KitchenOrderDto> getAllOrders() {
@@ -41,17 +46,16 @@ public class KitchenServiceImpl implements KitchenService {
     @Override
     public void createOrder(KitchenOrderDto order) {
         order.setStatus(KitchenStatus.CREATED);
+        System.out.println("KitchenService: createOrder before save" + order);
 
-        System.out.println("++++++++++++++++++");
-        System.out.println(order);
-        order = kitchenOrderMapper.toDto(kitchenOrderRepository.save(kitchenOrderMapper.toEntity(order)));
-        System.out.println("================");
-        System.out.println(order);
-
+        KitchenOrder order2 = kitchenOrderRepository.save(kitchenOrderMapper.toEntity(order));
+        System.out.println("KitchenService: createOrder after save" + order2);
         if (dishesIsAvailable(order)) {
+            System.out.println("dishesIsAvailable");
             acceptOrder(order.getOrderIdWaiterService());
             createOrderToDish(order);
         } else {
+            System.out.println("dishesIsNotAvailable");
             rejectOrder(order.getOrderIdWaiterService());
         }
 
@@ -71,6 +75,8 @@ public class KitchenServiceImpl implements KitchenService {
             throw new OrderNotFoundException(String.format("Order with id %s not found", orderId));
         }
         kitchenOrderRepository.updateStatusById(orderId, KitchenStatus.REJECTED);
+        waiterFeignClient.sendCanceledOrderToWaiter(kitchenOrderDtoToWaiterOrderSendDtoMapper
+                .map(getOrderById(orderId)));
     }
 
     @Override
@@ -93,38 +99,54 @@ public class KitchenServiceImpl implements KitchenService {
     }
 
     @Override
+    public DishDto getDishById(Long id) {
+        return kitchenDishMapper.toDto(kitchenDishRepository.findById(id)
+                .orElseThrow(() -> new DishNotFoundException(String.format("Dish with id %s not found", id))));
+    }
+
+    @Override
     public Boolean dishesIsAvailable(KitchenOrderDto order) {
+        System.out.println(" before FindAll dishesIsAvailable: " + order);
         Set<String> dishDtoSet = kitchenDishRepository.findAllDistinct()
                 .stream()
                 .map(kitchenDishMapper::toDto)
                 .map(DishDto::shortName)
                 .collect(Collectors.toSet());
 
-        System.out.println(dishDtoSet);
-        System.out.println("===================");
-        System.out.println(order.getDishes()
+        System.out.println("dishIs available " + dishDtoSet);
+
+
+        return dishDtoSet.containsAll(order.getOrderDishes()
                 .stream()
                 .map(DishDto::shortName)
                 .collect(Collectors.toSet()));
-//        System.out.println(dishesIsAvailable(order));
-
-        return dishDtoSet.containsAll(order.getDishes()
-                .stream()
-                .map(DishDto::shortName)
-                .collect(Collectors.toSet()));//возможно стоит использовать Set
     }
 
     @Override
     public void createOrderToDish(KitchenOrderDto order) {
-        System.out.println("=======");
-        System.out.println(order);
-        System.out.println("============");
-        for (DishDto dishDto : order.getDishes()) {
+
+        for (DishDto dishDto : order.getOrderDishes()) {
             OrderToDishDto orderToDishDto = new OrderToDishDto(order.getOrderIdWaiterService(),
                     getDishByShortName(dishDto.shortName()).id(),
                     dishDto.dishesNumber());
-            System.out.println(orderToDishDto);
-            kitchenOrderToDishRepository.save(kitchenOrderToDishMapper.toEntity(orderToDishDto));
+            System.out.println("for: orderToDishDto:" + orderToDishDto);
+
+//            OrderToDish orderToDish = kitchenOrderToDishMapper.toEntity(orderToDishDto);
+//
+//            orderToDish.setDish(kitchenDishMapper.toEntity(getDishById(orderToDishDto.dishId())));
+//            orderToDish.setOrder(kitchenOrderMapper.toEntity(getOrderById(orderToDishDto.kitchenOrderId())));
+
+            OrderToDish orderToDish = OrderToDish.builder()
+                    .id(new CompositeOrderToDishId(order.getOrderIdWaiterService(),
+                            getDishByShortName(dishDto.shortName()).id()))
+                    .dish(kitchenDishMapper.toEntity(getDishById(getDishByShortName(dishDto.shortName()).id())))
+                    .order(kitchenOrderMapper.toEntity(getOrderById(order.getOrderIdWaiterService())))
+                    .dishesNumber(dishDto.dishesNumber())
+                    .build();
+            System.out.println("orderToDish:" + orderToDish);
+            kitchenOrderToDishRepository.save(orderToDish);
+            System.out.println("kitchenOrderToDishRepository: after save" + orderToDishDto);
         }
     }
+
 }

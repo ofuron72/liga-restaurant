@@ -7,13 +7,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.io.Serializable;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Embeddable
 public class CompositeOrderToDishId implements Serializable {
     @Column(name = "kitchen_order_id")

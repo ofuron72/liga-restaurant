@@ -20,5 +20,6 @@ public interface WaiterOrderMapper {
 
     WaiterOrderStatusDto getOrderStatus(@Param("id") Long id);
 
-    void serveOrder(@Param("order") WaiterOrderDto order);
+    void updateStatusOrder(@Param("order") WaiterOrderDto order);
+
 }

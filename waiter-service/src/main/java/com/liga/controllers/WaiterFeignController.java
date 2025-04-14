@@ -21,4 +21,10 @@ public class WaiterFeignController {
         waiterService.serveOrder(waiterOrderDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/rejected")
+    public ResponseEntity<Void> receiveRejectedOrderFromKitchen(@RequestBody WaiterOrderDto waiterOrderDto) {
+        waiterService.cancelOrder(waiterOrderDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

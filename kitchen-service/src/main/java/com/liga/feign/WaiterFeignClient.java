@@ -10,4 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface WaiterFeignClient {
     @PostMapping("/integration-api/orders/cooked")
     ResponseEntity<Void> sendCookedOrderToWaiter(@RequestBody WaiterOrderSendDto waiterOrderSendDto);
+
+    @PostMapping("/integration-api/orders/rejected")
+    ResponseEntity<Void> sendCanceledOrderToWaiter(@RequestBody WaiterOrderSendDto waiterOrderSendDto);
 }

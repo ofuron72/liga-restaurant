@@ -1,9 +1,9 @@
 package com.liga.dto;
 
-import java.util.Set;
+import java.util.List;
 
 public record KitchenOrderReceiveDto(
         Long waiterOrderNo,
         Long orderIdWaiterService,
-        Set<DishDto> dishes) {
+        List<DishDto> dishes) {
 }

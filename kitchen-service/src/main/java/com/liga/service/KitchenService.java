@@ -1,6 +1,7 @@
 package com.liga.service;
 
 
+import com.liga.dto.DishDto;
 import com.liga.dto.KitchenOrderDto;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,8 @@ public interface KitchenService {
     Boolean dishesIsAvailable(KitchenOrderDto order);
 
     void createOrderToDish(KitchenOrderDto order);
+
+    DishDto getDishById(Long orderId);
 
 
 }

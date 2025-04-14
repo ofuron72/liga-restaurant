@@ -15,4 +15,6 @@ public interface WaiterService {
     WaiterOrderStatusDto getOrderStatus(Long id);
 
     void serveOrder(WaiterOrderDto order);
+
+    void cancelOrder(WaiterOrderDto order);
 }

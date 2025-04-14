@@ -21,7 +21,7 @@ public class KitchenFeignController {
 
     @PostMapping
     public ResponseEntity<Void> receiveOrderFromWaiter(@RequestBody KitchenOrderReceiveDto orderDto) {
-        System.out.println(orderDto);
+        System.out.println("Kitchen feignController receiveOrderFromWaiter orderDto: " + orderDto);
         kitchenService.createOrder(kitchenOrderDtoMapper.toDto(orderDto));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

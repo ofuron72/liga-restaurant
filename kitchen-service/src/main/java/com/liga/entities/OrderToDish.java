@@ -5,12 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.EqualsAndHashCode;
+import lombok.Builder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@EqualsAndHashCode
+@Builder
+@ToString
 @Table(name = "order_to_dish")
 public class OrderToDish {
 

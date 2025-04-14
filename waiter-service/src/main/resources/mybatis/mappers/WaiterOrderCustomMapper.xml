@@ -48,7 +48,7 @@
         where order_no = #{id}
     </select>
 
-    <update id="serveOrder"
+    <update id="updateStatusOrder"
             parameterType="com.liga.dto.WaiterOrderDto">
         UPDATE waiter_order
         SET

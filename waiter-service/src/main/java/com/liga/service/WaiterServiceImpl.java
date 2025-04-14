@@ -54,6 +54,12 @@ public class WaiterServiceImpl implements WaiterService {
     @Override
     public void serveOrder(WaiterOrderDto order) {
         order.setStatus(OrderStatus.READY_TO_PICKUP);
-        waiterOrderMapper.serveOrder(order);
+        waiterOrderMapper.updateStatusOrder(order);
+    }
+
+    @Override
+    public void cancelOrder(WaiterOrderDto order) {
+        order.setStatus(OrderStatus.REJECTED_BY_THE_KITCHEN);
+        waiterOrderMapper.updateStatusOrder(order);
     }
 }
