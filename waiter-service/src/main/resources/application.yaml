@@ -11,5 +11,12 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
 
+  cloud:
+    openfeign:
+      client:
+        config:
+          kitchen-service:
+            url: http://localhost:8080
+
 mybatis:
   mapper-locations: classpath:mybatis/mappers/*.xml

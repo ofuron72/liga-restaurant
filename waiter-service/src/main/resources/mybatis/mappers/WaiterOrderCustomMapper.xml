@@ -48,6 +48,14 @@
         where order_no = #{id}
     </select>
 
+    <update id="serveOrder"
+            parameterType="com.liga.dto.WaiterOrderDto">
+        UPDATE waiter_order
+        SET
+        status = #{order.status}
+        WHERE order_no = #{order.id}
+    </update>
+
 
 </mapper>
 

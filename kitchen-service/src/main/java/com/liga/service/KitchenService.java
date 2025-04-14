@@ -11,9 +11,11 @@ public interface KitchenService {
 
     void rejectOrder(Long orderId);
 
-    void setStatusReady(Long orderId);
+    void setStatusCooked(Long orderId);
 
     void createOrder(KitchenOrderDto order);
+
+    KitchenOrderDto getOrderById(Long orderId);
 
 
 }
