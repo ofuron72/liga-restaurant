@@ -38,6 +38,8 @@
         <hibernate.jpamodelgen.version>6.6.4.Final</hibernate.jpamodelgen.version>
         <jakarta.xml.bind.version>4.0.2</jakarta.xml.bind.version>
         <jaxb.version>4.0.5</jaxb.version>
+        <spring.cloud.starter.openfeign.version>4.2.0</spring.cloud.starter.openfeign.version>
+        <hutool.version>5.8.25</hutool.version>
     </properties>
 
     <dependencyManagement>
@@ -140,6 +142,19 @@
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-runtime</artifactId>
                 <version>${jaxb.version}</version>
+            </dependency>
+
+            <!--            feign-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>${spring.cloud.starter.openfeign.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
 
         </dependencies>

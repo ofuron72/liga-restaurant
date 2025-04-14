@@ -32,10 +32,15 @@ public class WaiterServiceImpl implements WaiterService {
     }
 
     @Override
-    public void createOrder(WaiterOrderDto order) {
+    public WaiterOrderDto createOrder(WaiterOrderDto order) {
+
         order.setStatus(OrderStatus.ACCEPTED);
+
         order.setCreateDttm(OffsetDateTime.now());
+
         waiterOrderMapper.create(order);
+
+        return order;
     }
 
     @Override
@@ -43,5 +48,11 @@ public class WaiterServiceImpl implements WaiterService {
         return Optional
                 .ofNullable(waiterOrderMapper.getOrderStatus(id))
                 .orElseThrow(() -> new StatusNotFoundException(String.format("Status for order with id %s not found", id)));
+    }
+
+    @Override
+    public void serveOrder(WaiterOrderDto order) {
+        order.setStatus(OrderStatus.READY_TO_PICKUP);
+        waiterOrderMapper.serveOrder(order);
     }
 }

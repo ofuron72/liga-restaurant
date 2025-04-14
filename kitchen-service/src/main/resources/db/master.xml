@@ -11,4 +11,6 @@
     <include file="changelog/005_create_sequence_kitchen_order.xml" relativeToChangelogFile="true"/>
     <include file="changelog/006_create_sequence_order_to_dish.xml" relativeToChangelogFile="true"/>
     <include file="changelog/007_insert_values.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/008_delete_values.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/009_add_column_into_kitchen_order.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
