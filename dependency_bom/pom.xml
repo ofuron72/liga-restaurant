@@ -40,6 +40,7 @@
         <jaxb.version>4.0.5</jaxb.version>
         <spring.cloud.starter.openfeign.version>4.2.0</spring.cloud.starter.openfeign.version>
         <hutool.version>5.8.25</hutool.version>
+        <spring.kafka.version>3.2.4</spring.kafka.version>
     </properties>
 
     <dependencyManagement>
@@ -155,6 +156,12 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka</artifactId>
+                <version>${spring.kafka.version}</version>
             </dependency>
 
         </dependencies>

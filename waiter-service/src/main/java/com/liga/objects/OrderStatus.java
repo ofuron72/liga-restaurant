@@ -2,6 +2,6 @@ package com.liga.objects;
 
 public enum OrderStatus {
     ACCEPTED,
-    COOKING,
+    REJECTED_BY_THE_KITCHEN,
     READY_TO_PICKUP,
 }

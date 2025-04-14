@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -28,5 +29,5 @@ public class KitchenOrderDto {
 
     private Long orderIdWaiterService;
 
-    private Set<DishDto> dishes;
+    private Set<DishDto> orderDishes = new HashSet<>();
 }

@@ -2,10 +2,10 @@ package com.liga.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Set;
+import java.util.List;
 
 public record WaiterOrderSendDto(
         @JsonProperty("waiterId") Long waiterId,
         @JsonProperty("id") Long orderIdWaiterService,
-        @JsonProperty("dishes") Set<DishDto> dishes) {
+        @JsonProperty("dishes") List<DishDto> dishes) {
 }
