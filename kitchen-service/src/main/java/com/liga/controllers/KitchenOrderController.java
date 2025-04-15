@@ -3,13 +3,13 @@ package com.liga.controllers;
 import com.liga.dto.KitchenOrderDto;
 import com.liga.dto.ResponseDto;
 import com.liga.service.KitchenService;
-import com.liga.service.orchestrator.KitchenOrderOrchestrator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/kitchen/orders")
@@ -19,8 +19,8 @@ public class KitchenOrderController {
     private final KitchenOrderOrchestrator kitchenOrderOrchestrator;
 
     @GetMapping
-    public ResponseEntity<Set<KitchenOrderDto>> getAllOrders() {
-        Set<KitchenOrderDto> orders = kitchenService.getAllOrders();
+    public ResponseEntity<List<KitchenOrderDto>> getAllOrders() {
+        List<KitchenOrderDto> orders = kitchenService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
