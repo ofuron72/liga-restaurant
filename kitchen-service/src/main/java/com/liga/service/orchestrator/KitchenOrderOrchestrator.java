@@ -1,7 +1,8 @@
 package com.liga.service.orchestrator;
 
+import com.liga.converter.KitchenOrderDtoToWaiterOrderSendDtoMapper;
 import com.liga.dto.KitchenOrderDto;
-import com.liga.dto.WaiterOrderRequestDto;
+import com.liga.dto.WaiterOrderSendDto;
 import com.liga.exceptions.SendOrderFeignException;
 import com.liga.feign.WaiterFeignClient;
 import com.liga.service.KitchenService;

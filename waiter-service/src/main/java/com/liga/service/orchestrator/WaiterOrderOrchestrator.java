@@ -1,11 +1,9 @@
 package com.liga.service.orchestrator;
 
-import com.liga.dto.KitchenOrderRequestDto;
+import com.liga.converter.WaiterOrderDtoToKitchenSendDtoMapper;
+import com.liga.dto.CreateOrderEvent;
 import com.liga.dto.WaiterOrderDto;
-import com.liga.exceptions.SendOrderFeignException;
-import com.liga.integration.feign.KitchenFeignClient;
 import com.liga.service.WaiterService;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -29,7 +27,5 @@ public class WaiterOrderOrchestrator {
         CreateOrderEvent createOrderEvent = waiterOrderDtoToKitchenSendDtoMapper.map(waiterOrderDtoWithId);
 
         kafkaTemplate.send(topicName, createOrderEvent);
-
-
     }
 }

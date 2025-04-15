@@ -4,7 +4,6 @@ import com.liga.converter.KitchenOrderDtoMapper;
 import com.liga.dto.CreateOrderEvent;
 import com.liga.service.KitchenService;
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -18,6 +17,7 @@ public class KitchenListenerService {
 
     @KafkaHandler
     public void handleOrder(CreateOrderEvent event) {
+        System.out.println("KitchenListenerService handleOrder: " + event);
         kitchenService.createOrder(kitchenOrderDtoMapper.toDto(event));
     }
 }
