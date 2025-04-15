@@ -3,6 +3,7 @@ package com.liga.controllers;
 import com.liga.dto.KitchenOrderDto;
 import com.liga.dto.ResponseDto;
 import com.liga.service.KitchenService;
+import com.liga.service.orchestrator.KitchenOrderOrchestrator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.List;
 public class KitchenOrderController {
     private final KitchenService kitchenService;
     private final KitchenOrderOrchestrator kitchenOrderOrchestrator;
+    private final KitchenOrderDtoMapper kitchenOrderDtoMapper;
 
     @GetMapping
     public ResponseEntity<List<KitchenOrderDto>> getAllOrders() {
@@ -48,12 +50,12 @@ public class KitchenOrderController {
                 .format("status order with id: %d changed -> REJECT", id)), HttpStatus.OK);
     }
 
-
-    @PostMapping("/receive")
-    public ResponseEntity<Void> receiveOrderFromWaiter(@RequestBody KitchenOrderDto orderDto) {
-        kitchenService.createOrder(orderDto);
+    @PostMapping
+    public ResponseEntity<Void> createOrder(@RequestBody @Valid KitchenOrderDto kitchenOrderDto) {
+        kitchenService.createOrder(kitchenOrderDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
 
 
 }

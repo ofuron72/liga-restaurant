@@ -5,6 +5,13 @@ spring:
   liquibase:
     change-log: classpath:db/master.xml
 
+
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+
   datasource:
     url: jdbc:postgresql://localhost:5433/waiter-service
     username: postgres
@@ -20,3 +27,8 @@ spring:
 
 mybatis:
   mapper-locations: classpath:mybatis/mappers/*.xml
+
+kafka:
+  topic:
+    name:
+      createOrderTopic

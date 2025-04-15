@@ -36,9 +36,7 @@ public class WaiterServiceImpl implements WaiterService {
     public WaiterOrderDto createOrder(WaiterOrderDto order) {
 
         order.setStatus(OrderStatus.ACCEPTED);
-
         order.setCreateDttm(OffsetDateTime.now());
-
         waiterOrderMapper.create(order);
 
         return order;
