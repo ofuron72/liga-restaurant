@@ -42,6 +42,16 @@ public class KitchenServiceImpl implements KitchenService {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Создаёт новый заказ на кухне, устанавливает ему статус {@code CREATED} и сохраняет в базе данных.
+     * <p>
+     * После сохранения заказа метод проверяет, доступны ли все блюда из заказа на кухне.
+     * Если все блюда доступны, создаёт связи между заказом и блюдами, а затем переводит заказ в статус "принят".
+     * Если хотя бы одного блюда нет в наличии, заказ переводится в статус "отклонён".
+     * </p>
+     *
+     * @param order объект {@link KitchenOrderDto}, содержащий информацию о заказе и списке блюд.
+     */
     @Override
     public void createOrder(KitchenOrderDto order) {
 
@@ -103,6 +113,18 @@ public class KitchenServiceImpl implements KitchenService {
                 .orElseThrow(() -> new DishNotFoundException(String.format("Dish with id %s not found", id))));
     }
 
+    /**
+     * Проверяет, доступны ли все блюда из заказа в текущем списке блюд на кухне.
+     * <p>
+     * Метод получает уникальные короткие имена всех блюд, доступных на кухне,
+     * и сравнивает их с блюдами, указанными в заказе. Если все блюда из заказа
+     * присутствуют среди доступных блюд, возвращает {@code true}, иначе — {@code false}.
+     * </p>
+     *
+     * @param order объект {@link KitchenOrderDto}, содержащий список заказанных блюд.
+     * @return {@code true}, если все блюда из заказа доступны на кухне;
+     * {@code false} в противном случае.
+     */
     @Override
     public Boolean dishesIsAvailable(KitchenOrderDto order) {
 
@@ -118,6 +140,12 @@ public class KitchenServiceImpl implements KitchenService {
                 .collect(Collectors.toSet()));
     }
 
+    /**
+     * Создает и сохраняет связи между заказом и блюдом в таблице
+     * OrderToDish
+     * @param order объект {@link KitchenOrderDto}, содержащий идентификатор заказа и список блюд.
+     *  * Для каждого блюда из списка будет создана отдельная запись связи с заказом.
+     * */
     @Override
     public void createOrderToDish(KitchenOrderDto order) {
 
@@ -132,7 +160,6 @@ public class KitchenServiceImpl implements KitchenService {
                     .build();
 
             kitchenOrderToDishRepository.save(orderToDish);
-
         }
     }
 

@@ -24,9 +24,7 @@ public class WaiterOrderController {
 
     @PostMapping
     public ResponseEntity<Void> createOrder(@RequestBody @Valid WaiterOrderCreateRequestDto waiterOrderDto) {
-        System.out.println(waiterOrderDto);
-        System.out.println(waiterOrderDtoMapper
-                .toWaiterOrderDto(waiterOrderDto));
+
         waiterOrderOrchestrator.saveAndSend(waiterOrderDtoMapper
                 .toWaiterOrderDto(waiterOrderDto));
 
