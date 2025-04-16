@@ -1,10 +1,12 @@
 package com.liga.service;
 
 import com.liga.converter.KitchenDishMapper;
+import com.liga.converter.KitchenOrderDtoToResponseMapper;
 import com.liga.converter.KitchenOrderDtoToWaiterOrderSendDtoMapper;
 import com.liga.converter.KitchenOrderMapper;
 import com.liga.dto.DishDto;
 import com.liga.dto.KitchenOrderDto;
+import com.liga.dto.KitchenOrderResponse;
 import com.liga.entities.CompositeOrderToDishId;
 import com.liga.entities.KitchenOrder;
 import com.liga.entities.OrderToDish;
@@ -16,12 +18,14 @@ import com.liga.repository.KitchenDishRepository;
 import com.liga.repository.KitchenOrderRepository;
 import com.liga.repository.KitchenOrderToDishRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KitchenServiceImpl implements KitchenService {
@@ -32,13 +36,15 @@ public class KitchenServiceImpl implements KitchenService {
     private final KitchenOrderDtoToWaiterOrderSendDtoMapper kitchenOrderDtoToWaiterOrderSendDtoMapper;
     private final WaiterFeignClient waiterFeignClient;
     private final KitchenOrderRepository kitchenOrderRepository;
+    private final KitchenOrderDtoToResponseMapper kitchenOrderDtoToResponseMapper;
 
     @Override
-    public Set<KitchenOrderDto> getAllOrders() {
+    public Set<KitchenOrderResponse> getAllOrders() {
         List<KitchenOrder> setEntities = kitchenOrderRepository.findAllDistinct();
 
         return setEntities.stream()
                 .map(kitchenOrderMapper::toDto)
+                .map(kitchenOrderDtoToResponseMapper::mapDtoToResponse)
                 .collect(Collectors.toSet());
     }
 
@@ -59,9 +65,13 @@ public class KitchenServiceImpl implements KitchenService {
 
         kitchenOrderRepository.save(kitchenOrderMapper.toEntity(order));
 
+        log.info("Order saved with status: {}", KitchenStatus.CREATED);
+
         if (dishesIsAvailable(order)) {
+            log.info("All dishes in order with id {} are available", order.getOrderIdWaiterService());
 
             createOrderToDish(order);
+            log.info("created order-to-dish relationship for waiterOrderId: {}", order.getOrderIdWaiterService());
 
             acceptOrder(order.getOrderIdWaiterService());
         } else {
@@ -72,28 +82,37 @@ public class KitchenServiceImpl implements KitchenService {
     @Override
     public void acceptOrder(Long orderId) {
         if (!kitchenOrderRepository.existsById(orderId)) {
+            log.warn("Order with id {} does not exist. Cannot accept", orderId);
             throw new OrderNotFoundException(String.format("Order with id %s not found", orderId));
         }
         kitchenOrderRepository.updateStatusById(orderId, KitchenStatus.ACCEPTED);
-
+        log.info("order with id {} mark as ACCEPTED", orderId);
     }
 
     @Override
     public void rejectOrder(Long orderId) {
         if (!kitchenOrderRepository.existsById(orderId)) {
+            log.warn("Order with id {} does not exist. Cannot reject", orderId);
             throw new OrderNotFoundException(String.format("Order with id %s not found", orderId));
         }
+
         kitchenOrderRepository.updateStatusById(orderId, KitchenStatus.REJECTED);
+        log.info("order with id {} mark as REJECTED", orderId);
+
+        log.debug("Sending rejected order with id={} to waiter service", orderId);
         waiterFeignClient.sendCanceledOrderToWaiter(kitchenOrderDtoToWaiterOrderSendDtoMapper
                 .map(getOrderById(orderId)));
+        log.info("Rejected order with id={} sent to waiter service", orderId);
     }
 
     @Override
     public void setStatusReady(Long orderId) {
         if (!kitchenOrderRepository.existsById(orderId)) {
+            log.warn("Order with id={} not found. Cannot set status to COOKED.", orderId);
             throw new OrderNotFoundException(String.format("Order with id %s not found", orderId));
         }
         kitchenOrderRepository.updateStatusById(orderId, KitchenStatus.COOKED);
+        log.info("Order with id={} marked as COOKED", orderId);
     }
 
     @Override

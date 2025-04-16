@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
+import lombok.Builder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@Builder
 public class KitchenOrderDto {
 
     private Long id;

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;
+import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.ZonedDateTime;
@@ -19,6 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
+@Builder
 @Table(name = "kitchen_order")
 public class KitchenOrder {
     @Id

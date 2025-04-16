@@ -8,9 +8,11 @@ import com.liga.feign.WaiterFeignClient;
 import com.liga.service.KitchenService;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -31,9 +33,10 @@ public class KitchenOrderOrchestrator {
 
         try {
             waiterFeignClient.sendCookedOrderToWaiter(orderForWaiterService);
+            log.info("Sent order to waiter");
         } catch (FeignException ex) {
+            log.warn("Error sending cooked order: {} to waiter", orderForWaiterService);
             throw new SendOrderFeignException("Error sending cooked order to waiter");
-
         }
     }
 
