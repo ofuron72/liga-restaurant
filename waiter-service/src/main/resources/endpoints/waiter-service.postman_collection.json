@@ -35,7 +35,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/waiter/orders/9",
+					"raw": "http://localhost:8081/api/waiter/orders/2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -45,7 +45,7 @@
 						"api",
 						"waiter",
 						"orders",
-						"9"
+						"2"
 					]
 				},
 				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -74,7 +74,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"waiterId\":2,\n    \"tableNo\":\"A5\"\n}",
+					"raw": "{\n    \"waiterId\":1,\n    \"tableNo\":\"C3\",\n    \"dishes\": [\n         {\n         \"shortName\":\"Salad\",\n         \"dishesNumber\":1\n        },\n         {\n         \"shortName\":\"Pizza\",\n         \"dishesNumber\":3\n        }\n        ]\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"

@@ -6,14 +6,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-@Repository
-public interface KitchenRepository extends JpaRepository<KitchenOrder, Long> {
+import java.util.List;
+
+public interface KitchenOrderRepository extends JpaRepository<KitchenOrder, Long> {
 
     @Modifying
+    @Transactional
     @Query("UPDATE KitchenOrder k SET k.status = :status WHERE k.id = :id")
     void updateStatusById(@Param("id") Long id, @Param("status") KitchenStatus status);
+
+    @Query("select distinct o from KitchenOrder o")
+    List<KitchenOrder> findAllDistinct();
+
+
 
 }
 

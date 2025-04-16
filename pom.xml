@@ -20,7 +20,7 @@
 		<module>dependency_bom</module>
 		<module>waiter-service</module>
 		<module>kitchen-service</module>
-	</modules>
+    </modules>
 
 	<dependencies>
 		<dependency>
