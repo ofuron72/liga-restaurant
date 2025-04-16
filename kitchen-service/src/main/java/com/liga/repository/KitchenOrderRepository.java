@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
 public interface KitchenOrderRepository extends JpaRepository<KitchenOrder, Long> {
 
     @Modifying
