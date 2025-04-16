@@ -17,7 +17,6 @@ public class KitchenListenerService {
 
     @KafkaHandler
     public void handleOrder(CreateOrderEvent event) {
-        System.out.println("KitchenListenerService handleOrder: " + event);
         kitchenService.createOrder(kitchenOrderDtoMapper.toDto(event));
     }
 }

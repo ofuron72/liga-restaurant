@@ -1,6 +1,5 @@
 package com.liga.controllers;
 
-import com.liga.converter.WaiterOrderDtoMapper;
 import com.liga.dto.WaiterOrderCreateRequestDto;
 import com.liga.dto.WaiterOrderDto;
 import com.liga.dto.WaiterOrderStatusDto;
@@ -20,13 +19,12 @@ import java.util.Set;
 public class WaiterOrderController {
     private final WaiterService waiterService;
     private final WaiterOrderOrchestrator waiterOrderOrchestrator;
-    private final WaiterOrderDtoMapper waiterOrderDtoMapper;
+
 
     @PostMapping
     public ResponseEntity<Void> createOrder(@RequestBody @Valid WaiterOrderCreateRequestDto waiterOrderDto) {
 
-        waiterOrderOrchestrator.saveAndSend(waiterOrderDtoMapper
-                .toWaiterOrderDto(waiterOrderDto));
+        waiterOrderOrchestrator.saveAndSend(waiterOrderDto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

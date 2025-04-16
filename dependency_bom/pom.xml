@@ -40,6 +40,10 @@
         <jaxb.version>4.0.5</jaxb.version>
         <spring.cloud.starter.openfeign.version>4.2.0</spring.cloud.starter.openfeign.version>
         <spring.kafka.version>3.2.4</spring.kafka.version>
+        <springdoc.openapi.starter.version>2.5.0</springdoc.openapi.starter.version>
+        <mockito.core.version>5.14.2</mockito.core.version>
+        <junit.jupiter.version>5.11.4</junit.jupiter.version>
+        <mockito.junit.jupiter.version>5.14.2</mockito.junit.jupiter.version>
     </properties>
 
     <dependencyManagement>
@@ -155,6 +159,33 @@
                 <groupId>org.springframework.kafka</groupId>
                 <artifactId>spring-kafka</artifactId>
                 <version>${spring.kafka.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.openapi.starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.core.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>${mockito.junit.jupiter.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>
