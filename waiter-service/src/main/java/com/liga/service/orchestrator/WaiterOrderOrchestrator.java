@@ -1,33 +1,34 @@
 package com.liga.service.orchestrator;
 
-import com.liga.dto.KitchenOrderRequestDto;
+import com.liga.converter.WaiterOrderDtoMapper;
+import com.liga.converter.WaiterOrderDtoToKitchenSendDtoMapper;
+import com.liga.dto.CreateOrderEvent;
+import com.liga.dto.WaiterOrderCreateRequestDto;
 import com.liga.dto.WaiterOrderDto;
-import com.liga.exceptions.SendOrderFeignException;
-import com.liga.integration.feign.KitchenFeignClient;
 import com.liga.service.WaiterService;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class WaiterOrderOrchestrator {
-    private final KitchenFeignClient kitchenFeignClient;
+    private final KafkaTemplate<String, CreateOrderEvent> kafkaTemplate;
     private final WaiterService waiterService;
+    private final WaiterOrderDtoToKitchenSendDtoMapper waiterOrderDtoToKitchenSendDtoMapper;
+    private final WaiterOrderDtoMapper waiterOrderDtoMapper;
 
-    public void saveAndSend(WaiterOrderDto waiterOrderDto) {
-        WaiterOrderDto waiterOrderDtoWithId = waiterService.createOrder(waiterOrderDto);
+    @Value("${kafka.topic.name}")
+    private String topicName;
 
-        KitchenOrderRequestDto kitchenOrderRequestDto =
-                new KitchenOrderRequestDto(waiterOrderDto.getWaiterId(), waiterOrderDtoWithId.getId());
+    public void saveAndSend(WaiterOrderCreateRequestDto waiterOrderDto) {
+        WaiterOrderDto waiterOrderDtoWithId = waiterService
+                .createOrder(waiterOrderDtoMapper.toWaiterOrderDto(waiterOrderDto));
 
-        try {
-            kitchenFeignClient.sendOrderToKitchen(kitchenOrderRequestDto);
-        } catch (FeignException e) {
-            throw new SendOrderFeignException("Failed sending order to the kitchen");
-        }
+        CreateOrderEvent createOrderEvent = waiterOrderDtoToKitchenSendDtoMapper
+                .map(waiterOrderDtoWithId);
 
+        kafkaTemplate.send(topicName, createOrderEvent);
     }
 }

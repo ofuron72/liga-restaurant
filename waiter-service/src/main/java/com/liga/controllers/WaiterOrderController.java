@@ -1,5 +1,6 @@
 package com.liga.controllers;
 
+import com.liga.dto.WaiterOrderCreateRequestDto;
 import com.liga.dto.WaiterOrderDto;
 import com.liga.dto.WaiterOrderStatusDto;
 import com.liga.service.WaiterService;
@@ -10,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/waiter/orders")
@@ -19,15 +20,18 @@ public class WaiterOrderController {
     private final WaiterService waiterService;
     private final WaiterOrderOrchestrator waiterOrderOrchestrator;
 
+
     @PostMapping
-    public ResponseEntity<Void> createOrder(@RequestBody @Valid WaiterOrderDto waiterOrderDto) {
+    public ResponseEntity<Void> createOrder(@RequestBody @Valid WaiterOrderCreateRequestDto waiterOrderDto) {
+
         waiterOrderOrchestrator.saveAndSend(waiterOrderDto);
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<WaiterOrderDto>> getAllOrders() {
-        List<WaiterOrderDto> ordersDto = waiterService.getAllOrders();
+    public ResponseEntity<Set<WaiterOrderDto>> getAllOrders() {
+        Set<WaiterOrderDto> ordersDto = waiterService.getAllOrders();
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
     }
 
@@ -43,9 +47,16 @@ public class WaiterOrderController {
         return new ResponseEntity<>(waiterOrderStatusDto, HttpStatus.OK);
     }
 
+
     @PostMapping("/cooked")
     public ResponseEntity<Void> receiveCookedOrderFromKitchen(@RequestBody WaiterOrderDto waiterOrderDto) {
         waiterService.serveOrder(waiterOrderDto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/rejected")
+    public ResponseEntity<Void> receiveRejectedOrderFromKitchen(@RequestBody WaiterOrderDto waiterOrderDto) {
+        waiterService.cancelOrder(waiterOrderDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

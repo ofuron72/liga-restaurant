@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class WaiterServiceImpl implements WaiterService {
     }
 
     @Override
-    public List<WaiterOrderDto> getAllOrders() {
+    public Set<WaiterOrderDto> getAllOrders() {
         return waiterOrderMapper.getAll();
     }
 
@@ -35,9 +36,7 @@ public class WaiterServiceImpl implements WaiterService {
     public WaiterOrderDto createOrder(WaiterOrderDto order) {
 
         order.setStatus(OrderStatus.ACCEPTED);
-
         order.setCreateDttm(OffsetDateTime.now());
-
         waiterOrderMapper.create(order);
 
         return order;
@@ -53,6 +52,12 @@ public class WaiterServiceImpl implements WaiterService {
     @Override
     public void serveOrder(WaiterOrderDto order) {
         order.setStatus(OrderStatus.READY_TO_PICKUP);
-        waiterOrderMapper.serveOrder(order);
+        waiterOrderMapper.updateStatusOrder(order);
+    }
+
+    @Override
+    public void cancelOrder(WaiterOrderDto order) {
+        order.setStatus(OrderStatus.REJECTED_BY_THE_KITCHEN);
+        waiterOrderMapper.updateStatusOrder(order);
     }
 }

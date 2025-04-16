@@ -68,7 +68,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/kitchen/orders/7/setReject",
+					"raw": "http://localhost:8080/api/kitchen/orders/3/setReject",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -78,7 +78,7 @@
 						"api",
 						"kitchen",
 						"orders",
-						"7",
+						"3",
 						"setReject"
 					]
 				}
@@ -91,7 +91,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/kitchen/orders/7/setReady",
+					"raw": "http://localhost:8080/api/kitchen/orders/1/setReady",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -101,38 +101,8 @@
 						"api",
 						"kitchen",
 						"orders",
-						"7",
+						"1",
 						"setReady"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "create order",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"waiterOrderNo\":3\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/kitchen/orders",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"kitchen",
-						"orders"
 					]
 				}
 			},

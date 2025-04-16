@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/kitchen/orders")
@@ -20,8 +20,8 @@ public class KitchenOrderController {
     private final KitchenOrderOrchestrator kitchenOrderOrchestrator;
 
     @GetMapping
-    public ResponseEntity<List<KitchenOrderDto>> getAllOrders() {
-        List<KitchenOrderDto> orders = kitchenService.getAllOrders();
+    public ResponseEntity<Set<KitchenOrderDto>> getAllOrders() {
+        Set<KitchenOrderDto> orders = kitchenService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
@@ -55,11 +55,6 @@ public class KitchenOrderController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/receive")
-    public ResponseEntity<Void> receiveOrderFromWaiter(@RequestBody KitchenOrderDto orderDto) {
-        kitchenService.createOrder(orderDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
 
 
 }
