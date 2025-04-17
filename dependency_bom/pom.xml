@@ -44,10 +44,22 @@
         <mockito.core.version>5.14.2</mockito.core.version>
         <junit.jupiter.version>5.11.4</junit.jupiter.version>
         <mockito.junit.jupiter.version>5.14.2</mockito.junit.jupiter.version>
+        <spring.boot.starter.test.version>3.2.10</spring.boot.starter.test.version>
+        <postgres.testcontainers.version>1.20.6</postgres.testcontainers.version>
+        <testcontainers.version>1.20.6</testcontainers.version>
+        <testcontainers.junit.jupiterversion>1.20.6</testcontainers.junit.jupiterversion>
+        <testcontainers.kafka.version>1.19.1</testcontainers.kafka.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.starter.test.version}</version>
+                <scope>test</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -185,6 +197,34 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
                 <version>${mockito.junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgres.testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${testcontainers.junit.jupiterversion}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>kafka</artifactId>
+                <version>${testcontainers.kafka.version}</version>
                 <scope>test</scope>
             </dependency>
 
