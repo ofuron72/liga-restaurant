@@ -29,49 +29,60 @@ public class WaiterServiceImpl implements WaiterService {
 
     @Override
     public WaiterOrderResponse getOrderById(Long id) {
-        return Optional
+        log.debug("trying to get waiter order by id {}", id);
+        var result = Optional
                 .ofNullable(waiterOrderDtoToResponseMapper
                         .mapDtoToResponse(waiterOrderMapper.getById(id)))
                 .orElseThrow(() -> new OrderNotFoundException(String.format("Order with id %s not found", id)));
+        log.debug("successfully get waiter order by id {}", id);
+        return result;
     }
 
     @Override
     public Set<WaiterOrderResponse> getAllOrders() {
-        return waiterOrderMapper.getAll()
+        log.debug("trying to get waiter orders");
+        var result = waiterOrderMapper.getAll()
                 .stream()
                 .map(waiterOrderDtoToResponseMapper::mapDtoToResponse)
                 .collect(Collectors.toSet());
+        log.debug("successfully get {} orders", result.size());
+        return result;
     }
 
     @Override
     public WaiterOrderDto createOrder(WaiterOrderDto order) {
+        log.debug("trying to create order {}", order);
 
         order.setStatus(OrderStatus.ACCEPTED);
         order.setCreateDttm(OffsetDateTime.now());
         waiterOrderMapper.create(order);
-        log.info("Order created: {}", order);
-
+        log.debug("Order created: {}", order);
         return order;
     }
 
     @Override
     public WaiterOrderStatusResponse getOrderStatus(Long id) {
-        return Optional
+        log.debug("trying to get waiter order status by id {}", id);
+        var result = Optional
                 .ofNullable(waiterOrderStatusDtoToResponseMapper.map(waiterOrderMapper.getOrderStatus(id)))
                 .orElseThrow(() -> new StatusNotFoundException(String.format("Status for order with id %s not found", id)));
+        log.debug("successfully get waiter order status by id {}", id);
+        return result;
     }
 
     @Override
     public void serveOrder(WaiterOrderDto order) {
+        log.debug("trying to serve order {}", order);
         order.setStatus(OrderStatus.READY_TO_PICKUP);
         waiterOrderMapper.updateStatusOrder(order);
-        log.info("Order with id={} ready to pickup", order.getId());
+        log.debug("Order with id={} ready to pickup", order.getId());
     }
 
     @Override
     public void cancelOrder(WaiterOrderDto order) {
+        log.debug("trying to cancel order {}", order);
         order.setStatus(OrderStatus.REJECTED_BY_THE_KITCHEN);
         waiterOrderMapper.updateStatusOrder(order);
-        log.info("Order with id={} rejected by the kitchen", order.getId());
+        log.debug("Order with id={} rejected by the kitchen", order.getId());
     }
 }

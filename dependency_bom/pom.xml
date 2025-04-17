@@ -41,6 +41,7 @@
         <spring.cloud.starter.openfeign.version>4.2.0</spring.cloud.starter.openfeign.version>
         <spring.kafka.version>3.2.4</spring.kafka.version>
         <springdoc.openapi.starter.version>2.8.0</springdoc.openapi.starter.version>
+        <!--        test-->
         <mockito.core.version>5.14.2</mockito.core.version>
         <junit.jupiter.version>5.11.4</junit.jupiter.version>
         <mockito.junit.jupiter.version>5.14.2</mockito.junit.jupiter.version>

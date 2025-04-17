@@ -35,7 +35,7 @@ public class KitchenOrderOrchestrator {
             waiterFeignClient.sendCookedOrderToWaiter(orderForWaiterService);
             log.info("Sent order to waiter");
         } catch (FeignException ex) {
-            log.warn("Error sending cooked order: {} to waiter", orderForWaiterService);
+            log.error("Error sending cooked order: {} to waiter", orderForWaiterService);
             throw new SendOrderFeignException("Error sending cooked order to waiter");
         }
     }
