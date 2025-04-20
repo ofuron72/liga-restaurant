@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
+/**
+ * Репозиторий для работы с сущностью {@link KitchenOrder}.
+ */
 public interface KitchenOrderRepository extends JpaRepository<KitchenOrder, Long> {
 
     @Modifying
@@ -19,9 +21,6 @@ public interface KitchenOrderRepository extends JpaRepository<KitchenOrder, Long
 
     @Query("select distinct o from KitchenOrder o")
     List<KitchenOrder> findAllDistinct();
-
-
-
 }
 
 

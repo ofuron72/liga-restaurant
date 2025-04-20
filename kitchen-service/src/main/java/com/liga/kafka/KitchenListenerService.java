@@ -8,6 +8,9 @@ import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+/**
+ * Сервис прослушивает топик Kafka, получает события и передает их в сервис обработки заказов.
+ */
 @RequiredArgsConstructor
 @Service
 @KafkaListener(topics = "${kafka.topic.name}", groupId = "kitchen-group")

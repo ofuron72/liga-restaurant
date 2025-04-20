@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+/**
+ * Оркестратор для обработки сохранения и отправки заказов официантов на кухню через Kafka.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,9 @@ public class WaiterOrderOrchestrator {
     @Value("${kafka.topic.name}")
     private String topicName;
 
+    /**
+     * Сохраняет новый заказ и отправляет его в кухню через Kafka.
+     */
     public void saveAndSend(WaiterOrderCreateRequestDto waiterOrderDto) {
         WaiterOrderDto waiterOrderDtoWithId = waiterService
                 .createOrder(waiterOrderDtoMapper.toWaiterOrderDto(waiterOrderDto));

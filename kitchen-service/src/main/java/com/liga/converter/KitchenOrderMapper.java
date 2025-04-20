@@ -5,6 +5,9 @@ import com.liga.entities.KitchenOrder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+/**
+ * Маппер для преобразования между сущностью {@link KitchenOrder} и DTO {@link KitchenOrderDto}.
+ */
 @Mapper
 public interface KitchenOrderMapper {
 

@@ -1,7 +1,10 @@
 package com.liga.service;
 
+import com.liga.converter.WaiterMenuDtoToResponseMapper;
 import com.liga.converter.WaiterOrderDtoToResponseMapper;
 import com.liga.converter.WaiterOrderStatusDtoToResponseMapper;
+import com.liga.dto.WaiterMenuItemDto;
+import com.liga.dto.WaiterMenuItemResponse;
 import com.liga.dto.WaiterOrderDto;
 import com.liga.dto.WaiterOrderResponse;
 import com.liga.dto.WaiterOrderStatusDto;
@@ -9,6 +12,7 @@ import com.liga.dto.WaiterOrderStatusResponse;
 import com.liga.exceptions.OrderNotFoundException;
 import com.liga.exceptions.StatusNotFoundException;
 import com.liga.objects.OrderStatus;
+import com.liga.repository.WaiterMenuMapper;
 import com.liga.repository.WaiterOrderMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +35,12 @@ class WaiterServiceImplTest {
 
     @Mock
     private WaiterOrderDtoToResponseMapper waiterOrderDtoToResponseMapper;
+
+    @Mock
+    private WaiterMenuMapper waiterMenuMapper;
+
+    @Mock
+    private WaiterMenuDtoToResponseMapper waiterMenuDtoToResponseMapper;
 
     @Mock
     private WaiterOrderStatusDtoToResponseMapper waiterOrderStatusDtoToResponseMapper;
@@ -319,4 +329,82 @@ class WaiterServiceImplTest {
         //then
         assertEquals(OrderStatus.REJECTED_BY_THE_KITCHEN, createdOrder.getStatus());
     }
+
+    /**
+     * Проверяет, что метод getAllMenuItems возвращает корректный набор заказов.
+     * <p>
+     * given: два пункта меню, возвращаемых маппером waiterOrderMapper.
+     * when: вызывается метод getAllMenuItems у waiterService.
+     * then: возвращаемое множество соответствует ожидаемым данным.
+     */
+    @Test
+    void testGetAllMenuItems_shouldReturnSetOfMenuItems() {
+        //given
+
+        WaiterMenuItemDto createdMenuItem1 = WaiterMenuItemDto.builder()
+                .id(1L)
+                .dish_name("Pizza")
+                .dish_cost(12.0)
+                .build();
+
+        WaiterMenuItemDto createdMenuItem2 = WaiterMenuItemDto.builder()
+                .id(2L)
+                .dish_name("Salad")
+                .dish_cost(7.99)
+                .build();
+
+        WaiterMenuItemResponse waiterMenuItemResponse1 = new WaiterMenuItemResponse(
+                "Pizza",
+                12.0
+        );
+
+        WaiterMenuItemResponse waiterMenuItemResponse2 = new WaiterMenuItemResponse(
+                "Salad",
+                7.99
+        );
+
+        when(waiterMenuMapper.getAll())
+                .thenReturn(Set.of(createdMenuItem1, createdMenuItem2));
+
+
+        when(waiterMenuDtoToResponseMapper.map(createdMenuItem1))
+                .thenReturn(waiterMenuItemResponse1);
+
+        when(waiterMenuDtoToResponseMapper.map(createdMenuItem2))
+                .thenReturn(waiterMenuItemResponse2);
+
+        //then
+        Set<WaiterMenuItemResponse> responses = waiterService.getAllMenuItem();
+
+        //then
+        assertNotNull(responses);
+        assertEquals(Set.of(waiterMenuItemResponse1, waiterMenuItemResponse2),
+                responses);
+        assertEquals(2, responses.size());
+    }
+
+
+    /**
+     * Проверяет, что метод getAllMenuItems возвращает пустое множество, если заказов нет.
+     * <p>
+     * given: пустое множество заказов, возвращаемое маппером waiterMenuMapper.getAll().
+     * when: вызывается метод getAllMenuItems у waiterService.
+     * then: возвращаемое множество пустое.
+     */
+    @Test
+    void testGetAllMenuItems_shouldReturnEmptySet() {
+
+        //given
+        when(waiterMenuMapper.getAll())
+                .thenReturn(Set.of());
+
+        //when
+        Set<WaiterMenuItemResponse> responses = waiterService.getAllMenuItem();
+
+        //then
+        assertNotNull(responses);
+        assertTrue(responses.isEmpty());
+    }
+
+
 }

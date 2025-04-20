@@ -9,6 +9,10 @@ import lombok.ToString;
 import lombok.EqualsAndHashCode;
 import lombok.Builder;
 
+/**
+ * Сущность, представляющая связь между заказом и блюдами.
+ * Использует составной первичный ключ {@link CompositeOrderToDishId}.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

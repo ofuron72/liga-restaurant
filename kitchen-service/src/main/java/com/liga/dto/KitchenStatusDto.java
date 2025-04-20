@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
 
+/**
+ * DTO, представляющий статус заказа на кухне.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

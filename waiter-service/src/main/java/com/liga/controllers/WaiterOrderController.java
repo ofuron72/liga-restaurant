@@ -1,6 +1,11 @@
 package com.liga.controllers;
 
-import com.liga.dto.*;
+
+import com.liga.dto.WaiterMenuItemResponse;
+import com.liga.dto.WaiterOrderCreateRequestDto;
+import com.liga.dto.WaiterOrderDto;
+import com.liga.dto.WaiterOrderResponse;
+import com.liga.dto.WaiterOrderStatusResponse;
 import com.liga.service.WaiterService;
 import com.liga.service.orchestrator.WaiterOrderOrchestrator;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -17,9 +22,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.Set;
 
 @RestController
@@ -67,7 +75,7 @@ public class WaiterOrderController {
                     description = "List of orders returned successfully",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = WaiterOrderDto.class))
+                            array = @ArraySchema(schema = @Schema(implementation = WaiterOrderResponse.class))
                     )
             )
     })
@@ -75,6 +83,27 @@ public class WaiterOrderController {
     public ResponseEntity<Set<WaiterOrderResponse>> getAllOrders() {
         Set<WaiterOrderResponse> ordersDto = waiterService.getAllOrders();
         return new ResponseEntity<>(ordersDto, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Get all menuItems",
+            description = "Returns a set of all menuItems",
+            operationId = "getAllMenuItems"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "List of menuItems returned successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = WaiterMenuItemResponse.class))
+                    )
+            )
+    })
+    @GetMapping("/menu")
+    public ResponseEntity<Set<WaiterMenuItemResponse>> getAllMenuItems() {
+        Set<WaiterMenuItemResponse> menuItemResponses = waiterService.getAllMenuItem();
+        return new ResponseEntity<>(menuItemResponses, HttpStatus.OK);
     }
 
     @Operation(

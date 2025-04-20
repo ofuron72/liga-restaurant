@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 
+/**
+ * Интерфейс для работы с заказами через MyBatis.
+ */
 @Mapper
 @Repository
 public interface WaiterOrderMapper {

@@ -13,6 +13,9 @@ import lombok.Builder;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * DTO, представляющий заказ на кухне.
+ */
 @Getter
 @Setter
 @ToString

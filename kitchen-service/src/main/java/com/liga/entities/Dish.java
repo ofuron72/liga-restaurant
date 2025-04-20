@@ -7,10 +7,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import lombok.Builder;
-
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Сущность, представляющее блюдо.
+ */
 @Entity
 @Table(name = "dish")
 @NoArgsConstructor

@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * DTO, представляющий статус заказа, в сервисе официанта.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

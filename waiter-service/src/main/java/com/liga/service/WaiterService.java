@@ -1,8 +1,8 @@
 package com.liga.service;
 
+import com.liga.dto.WaiterMenuItemResponse;
 import com.liga.dto.WaiterOrderDto;
 import com.liga.dto.WaiterOrderResponse;
-import com.liga.dto.WaiterOrderStatusDto;
 import com.liga.dto.WaiterOrderStatusResponse;
 
 import java.util.Set;
@@ -19,4 +19,6 @@ public interface WaiterService {
     void serveOrder(WaiterOrderDto order);
 
     void cancelOrder(WaiterOrderDto order);
+
+    Set<WaiterMenuItemResponse> getAllMenuItem();
 }

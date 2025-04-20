@@ -8,11 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
 import lombok.Builder;
-
 import java.time.OffsetDateTime;
-
 import java.util.Set;
 
+/**
+ * DTO, представляющий заказ, в сервисе официанта.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

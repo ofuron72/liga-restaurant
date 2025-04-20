@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Репозиторий для работы с сущностью {@link Dish}.
+ */
 public interface KitchenDishRepository extends JpaRepository<Dish, Long> {
 
     @Query("select distinct o from Dish o")

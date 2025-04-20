@@ -5,6 +5,9 @@ import com.liga.dto.WaiterOrderSendDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+/**
+ * Маппер для преобразования {@link KitchenOrderDto} в {@link WaiterOrderSendDto}.
+ */
 @Mapper
 public interface KitchenOrderDtoToWaiterOrderSendDtoMapper {
 

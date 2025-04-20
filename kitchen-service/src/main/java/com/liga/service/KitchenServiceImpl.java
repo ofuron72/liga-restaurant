@@ -20,11 +20,16 @@ import com.liga.repository.KitchenOrderToDishRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
+/**
+ * Реализация сервиса для работы с заказами на кухне.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -52,14 +57,8 @@ public class KitchenServiceImpl implements KitchenService {
     }
 
     /**
-     * Создаёт новый заказ на кухне, устанавливает ему статус {@code CREATED} и сохраняет в базе данных.
-     * <p>
-     * После сохранения заказа метод проверяет, доступны ли все блюда из заказа на кухне.
-     * Если все блюда доступны, создаёт связи между заказом и блюдами, а затем переводит заказ в статус "принят".
-     * Если хотя бы одного блюда нет в наличии, заказ переводится в статус "отклонён".
-     * </p>
-     *
-     * @param order объект {@link KitchenOrderDto}, содержащий информацию о заказе и списке блюд.
+     * Создаёт новый заказ на кухне, устанавливает ему статус
+     * и сохраняет в базе данных.
      */
     @Override
     public void createOrder(KitchenOrderDto order) {
@@ -93,6 +92,10 @@ public class KitchenServiceImpl implements KitchenService {
         log.debug("order with id {} mark as ACCEPTED", orderId);
     }
 
+    /**
+     * Отменяет заказ по указанному идентификатору и отправляет обновленную
+     * информацию о заказе в сервис официантов.
+     */
     @Override
     public void rejectOrder(Long orderId) {
         log.debug("trying to reject order");
@@ -149,30 +152,26 @@ public class KitchenServiceImpl implements KitchenService {
 
     /**
      * Проверяет, доступны ли все блюда из заказа в текущем списке блюд на кухне.
-     * <p>
      * Метод получает уникальные короткие имена всех блюд, доступных на кухне,
      * и сравнивает их с блюдами, указанными в заказе. Если все блюда из заказа
-     * присутствуют среди доступных блюд, возвращает {@code true}, иначе — {@code false}.
-     * </p>
-     *
-     * @param order объект {@link KitchenOrderDto}, содержащий список заказанных блюд.
-     * @return {@code true}, если все блюда из заказа доступны на кухне;
-     * {@code false} в противном случае.
+     * присутствуют среди доступных блюд в нужном количестве, возвращает true, иначе — false.
      */
     @Override
     public Boolean dishesIsAvailable(KitchenOrderDto order) {
         log.debug("trying to check available of dishes");
 
-        Set<String> dishDtoSet = kitchenDishRepository.findAllDistinct()
+        Map<String, DishDto> dishDtoSet = kitchenDishRepository.findAllDistinct()
                 .stream()
                 .map(kitchenDishMapper::toDto)
-                .map(DishDto::shortName)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toMap(DishDto::shortName, dishDto -> dishDto));
 
-        var result = dishDtoSet.containsAll(order.getOrderDishes()
+        var result = order.getOrderDishes()
                 .stream()
-                .map(DishDto::shortName)
-                .collect(Collectors.toSet()));
+                .allMatch(orderedDish ->
+                        Optional.ofNullable(dishDtoSet.get(orderedDish.shortName()))
+                                .map(dishDto -> dishDto.balance() >= orderedDish.dishesNumber())
+                                .orElse(false)
+                );
         log.debug("dishes: {} available: {}", dishDtoSet, result);
         return result;
     }
@@ -180,7 +179,6 @@ public class KitchenServiceImpl implements KitchenService {
     /**
      * Создает и сохраняет связи между заказом и блюдом в таблице
      * OrderToDish
-     * @param order объект {@link KitchenOrderDto}, содержащий идентификатор заказа и список блюд.
      *  * Для каждого блюда из списка будет создана отдельная запись связи с заказом.
      * */
     @Override

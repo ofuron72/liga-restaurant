@@ -5,6 +5,9 @@ import com.liga.dto.WaiterOrderDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+/**
+ * Mapper {@link WaiterOrderDto} в {@link CreateOrderEvent}
+ */
 @Mapper
 public interface WaiterOrderDtoToKitchenSendDtoMapper {
 
