@@ -1,7 +1,7 @@
 package com.liga.service;
 
 import com.liga.dto.WaiterMenuItemResponse;
-import com.liga.dto.WaiterOrderDto;
+import com.liga.entities.WaiterOrder;
 import com.liga.dto.WaiterOrderResponse;
 import com.liga.dto.WaiterOrderStatusResponse;
 
@@ -12,13 +12,13 @@ public interface WaiterService {
 
     Set<WaiterOrderResponse> getAllOrders();
 
-    WaiterOrderDto createOrder(WaiterOrderDto order);
+    WaiterOrder createOrder(WaiterOrder order);
 
     WaiterOrderStatusResponse getOrderStatus(Long id);
 
-    void serveOrder(WaiterOrderDto order);
+    void serveOrder(WaiterOrder order);
 
-    void cancelOrder(WaiterOrderDto order);
+    void cancelOrder(WaiterOrder order);
 
     Set<WaiterMenuItemResponse> getAllMenuItem();
 }

@@ -1,7 +1,7 @@
 package com.liga.controllers;
 
 import com.liga.WaiterServiceApplication;
-import com.liga.dto.WaiterOrderDto;
+import com.liga.entities.WaiterOrder;
 import com.liga.objects.OrderStatus;
 import com.liga.repository.WaiterOrderMapper;
 import org.junit.jupiter.api.Test;
@@ -67,7 +67,7 @@ class WaiterOrderControllerTest {
     @Test
     void getOrderById_shouldReturnOrder_whenOrderIsExists() throws Exception {
         //given
-        WaiterOrderDto orderCreated = new WaiterOrderDto(null,
+        WaiterOrder orderCreated = new WaiterOrder(null,
                 OrderStatus.ACCEPTED,
                 OffsetDateTime.now(),
                 1L,

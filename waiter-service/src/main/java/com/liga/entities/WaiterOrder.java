@@ -1,5 +1,6 @@
-package com.liga.dto;
+package com.liga.entities;
 
+import com.liga.dto.DishSendDto;
 import com.liga.objects.OrderStatus;
 import lombok.Setter;
 import lombok.Getter;
@@ -21,7 +22,7 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class WaiterOrderDto {
+public class WaiterOrder {
     private Long id;
 
     private OrderStatus status;

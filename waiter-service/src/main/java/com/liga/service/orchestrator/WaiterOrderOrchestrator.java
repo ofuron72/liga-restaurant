@@ -4,7 +4,7 @@ import com.liga.converter.WaiterOrderDtoMapper;
 import com.liga.converter.WaiterOrderDtoToKitchenSendDtoMapper;
 import com.liga.dto.CreateOrderEvent;
 import com.liga.dto.WaiterOrderCreateRequestDto;
-import com.liga.dto.WaiterOrderDto;
+import com.liga.entities.WaiterOrder;
 import com.liga.service.WaiterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,11 +30,11 @@ public class WaiterOrderOrchestrator {
      * Сохраняет новый заказ и отправляет его в кухню через Kafka.
      */
     public void saveAndSend(WaiterOrderCreateRequestDto waiterOrderDto) {
-        WaiterOrderDto waiterOrderDtoWithId = waiterService
+        WaiterOrder waiterOrderWithId = waiterService
                 .createOrder(waiterOrderDtoMapper.toWaiterOrderDto(waiterOrderDto));
 
         CreateOrderEvent createOrderEvent = waiterOrderDtoToKitchenSendDtoMapper
-                .map(waiterOrderDtoWithId);
+                .map(waiterOrderWithId);
 
         log.debug("trying to send order: {}", createOrderEvent);
         kafkaTemplate.send(topicName, createOrderEvent);

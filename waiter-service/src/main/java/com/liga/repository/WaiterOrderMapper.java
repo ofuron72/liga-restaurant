@@ -1,6 +1,6 @@
 package com.liga.repository;
 
-import com.liga.dto.WaiterOrderDto;
+import com.liga.entities.WaiterOrder;
 import com.liga.dto.WaiterOrderStatusDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,14 +14,14 @@ import java.util.Set;
 @Mapper
 @Repository
 public interface WaiterOrderMapper {
-    WaiterOrderDto getById(@Param("id") Long id);
+    WaiterOrder getById(@Param("id") Long id);
 
-    Set<WaiterOrderDto> getAll();
+    Set<WaiterOrder> getAll();
 
-    void create(WaiterOrderDto order);
+    void create(WaiterOrder order);
 
     WaiterOrderStatusDto getOrderStatus(@Param("id") Long id);
 
-    void updateStatusOrder(@Param("order") WaiterOrderDto order);
+    void updateStatusOrder(@Param("order") WaiterOrder order);
 
 }

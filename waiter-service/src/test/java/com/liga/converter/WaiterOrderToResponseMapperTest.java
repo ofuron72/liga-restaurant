@@ -1,6 +1,6 @@
 package com.liga.converter;
 
-import com.liga.dto.WaiterOrderDto;
+import com.liga.entities.WaiterOrder;
 import com.liga.dto.WaiterOrderResponse;
 import com.liga.objects.OrderStatus;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class WaiterOrderDtoToResponseMapperTest {
+class WaiterOrderToResponseMapperTest {
 
     private final WaiterOrderDtoToResponseMapper mapper = Mappers.getMapper(WaiterOrderDtoToResponseMapper.class);
 
@@ -26,7 +26,7 @@ class WaiterOrderDtoToResponseMapperTest {
     void testMapDtoToResponse_shouldMapCorrectly() {
 
         //given
-        WaiterOrderDto dto = WaiterOrderDto.builder()
+        WaiterOrder dto = WaiterOrder.builder()
                 .id(1L)
                 .status(OrderStatus.ACCEPTED)
                 .createDttm(OffsetDateTime.now())

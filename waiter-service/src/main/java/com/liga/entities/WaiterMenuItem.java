@@ -1,4 +1,4 @@
-package com.liga.dto;
+package com.liga.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 @Builder
-public class WaiterMenuItemDto {
+public class WaiterMenuItem {
     Long id;
     String dish_name;
     Double dish_cost;

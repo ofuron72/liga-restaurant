@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.liga.repository.WaiterOrderMapper">
 
-    <resultMap id="WaiterOrderDto" type="com.liga.dto.WaiterOrderDto" autoMapping="true">
+    <resultMap id="WaiterOrderDto" type="com.liga.entities.WaiterOrder" autoMapping="true">
         <result column="order_no" property="id"/>
         <result column="status" property="status"/>
         <result column="create_dttm" property="createDttm"/>
@@ -16,7 +16,7 @@
         WHERE order_no = #{id,jdbcType=BIGINT}
     </select>
 
-    <resultMap id="listWaiterOrderDto" type="com.liga.dto.WaiterOrderDto" autoMapping="true">
+    <resultMap id="listWaiterOrderDto" type="com.liga.entities.WaiterOrder" autoMapping="true">
         <result column="order_no" property="id"/>
         <result column="status" property="status"/>
         <result column="create_dttm" property="createDttm"/>
@@ -30,7 +30,7 @@
     </select>
 
     <insert id="create"
-            parameterType="com.liga.dto.WaiterOrderDto"
+            parameterType="com.liga.entities.WaiterOrder"
             useGeneratedKeys="true"
             keyProperty="id">
         insert into waiter_order (order_no, status, create_dttm, waiter_id, table_no)
@@ -49,7 +49,7 @@
     </select>
 
     <update id="updateStatusOrder"
-            parameterType="com.liga.dto.WaiterOrderDto">
+            parameterType="com.liga.entities.WaiterOrder">
         UPDATE waiter_order
         SET
         status = #{order.status}

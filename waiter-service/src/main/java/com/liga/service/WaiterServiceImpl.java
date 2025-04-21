@@ -4,7 +4,7 @@ import com.liga.converter.WaiterMenuDtoToResponseMapper;
 import com.liga.converter.WaiterOrderDtoToResponseMapper;
 import com.liga.converter.WaiterOrderStatusDtoToResponseMapper;
 import com.liga.dto.WaiterMenuItemResponse;
-import com.liga.dto.WaiterOrderDto;
+import com.liga.entities.WaiterOrder;
 import com.liga.dto.WaiterOrderResponse;
 import com.liga.dto.WaiterOrderStatusResponse;
 import com.liga.exceptions.OrderNotFoundException;
@@ -58,7 +58,7 @@ public class WaiterServiceImpl implements WaiterService {
     }
 
     @Override
-    public WaiterOrderDto createOrder(WaiterOrderDto order) {
+    public WaiterOrder createOrder(WaiterOrder order) {
         log.debug("trying to create order {}", order);
 
         order.setStatus(OrderStatus.ACCEPTED);
@@ -82,7 +82,7 @@ public class WaiterServiceImpl implements WaiterService {
      * Изменяет статус заказа на "готов к получению" и обновляет информацию о заказе.
      */
     @Override
-    public void serveOrder(WaiterOrderDto order) {
+    public void serveOrder(WaiterOrder order) {
         log.debug("trying to serve order {}", order);
         order.setStatus(OrderStatus.READY_TO_PICKUP);
         waiterOrderMapper.updateStatusOrder(order);
@@ -94,7 +94,7 @@ public class WaiterServiceImpl implements WaiterService {
      * и обновляет информацию о заказе.
      */
     @Override
-    public void cancelOrder(WaiterOrderDto order) {
+    public void cancelOrder(WaiterOrder order) {
         log.debug("trying to cancel order {}", order);
         order.setStatus(OrderStatus.REJECTED_BY_THE_KITCHEN);
         waiterOrderMapper.updateStatusOrder(order);
