@@ -9,7 +9,9 @@ import com.liga.dto.WaiterOrderResponse;
 import com.liga.dto.WaiterOrderStatusResponse;
 import com.liga.exceptions.OrderNotFoundException;
 import com.liga.exceptions.StatusNotFoundException;
+import com.liga.exceptions.WaiterNotFoundException;
 import com.liga.objects.OrderStatus;
+import com.liga.repository.WaiterAccountMapper;
 import com.liga.repository.WaiterMenuMapper;
 import com.liga.repository.WaiterOrderMapper;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class WaiterServiceImpl implements WaiterService {
     private final WaiterOrderStatusDtoToResponseMapper waiterOrderStatusDtoToResponseMapper;
     private final WaiterMenuMapper waiterMenuMapper;
     private final WaiterMenuDtoToResponseMapper waiterMenuDtoToResponseMapper;
+    private final WaiterAccountMapper waiterAccountMapper;
 
     @Override
     public WaiterOrderResponse getOrderById(Long id) {
@@ -61,6 +64,10 @@ public class WaiterServiceImpl implements WaiterService {
     public WaiterOrder createOrder(WaiterOrder order) {
         log.debug("trying to create order {}", order);
 
+        if (!waiterAccountMapper.existsById(order.getWaiterId())) {
+            throw new WaiterNotFoundException("Waiter not found with ID:"
+                    + order.getWaiterId());
+        }
         order.setStatus(OrderStatus.ACCEPTED);
         order.setCreateDttm(OffsetDateTime.now());
         waiterOrderMapper.create(order);
