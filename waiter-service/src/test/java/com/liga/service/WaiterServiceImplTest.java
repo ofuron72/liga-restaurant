@@ -12,6 +12,7 @@ import com.liga.dto.WaiterOrderStatusResponse;
 import com.liga.exceptions.OrderNotFoundException;
 import com.liga.exceptions.StatusNotFoundException;
 import com.liga.objects.OrderStatus;
+import com.liga.repository.WaiterAccountMapper;
 import com.liga.repository.WaiterMenuMapper;
 import com.liga.repository.WaiterOrderMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +45,9 @@ class WaiterServiceImplTest {
 
     @Mock
     private WaiterOrderStatusDtoToResponseMapper waiterOrderStatusDtoToResponseMapper;
+
+    @Mock
+    private WaiterAccountMapper waiterAccountMapper;
 
     @InjectMocks
     private WaiterServiceImpl waiterService;
@@ -227,9 +231,11 @@ class WaiterServiceImplTest {
                 .createDttm(fixedTime)
                 .status(OrderStatus.ACCEPTED)
                 .build();
+        when(waiterAccountMapper.existsById(createdOrder.getWaiterId())).thenReturn(true);
 
         //when
         var response = waiterService.createOrder(order);
+
 
         //then
         assertEquals(response.getWaiterId(), createdOrder.getWaiterId());
