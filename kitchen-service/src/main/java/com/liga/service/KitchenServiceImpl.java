@@ -8,8 +8,8 @@ import com.liga.dto.DishDto;
 import com.liga.dto.KitchenOrderDto;
 import com.liga.dto.KitchenOrderResponse;
 import com.liga.entities.CompositeOrderToDishId;
-import com.liga.entities.KitchenOrder;
-import com.liga.entities.OrderToDish;
+import com.liga.entities.KitchenOrderEntity;
+import com.liga.entities.OrderToDishEntity;
 import com.liga.exceptions.DishNotFoundException;
 import com.liga.exceptions.OrderNotFoundException;
 import com.liga.feign.WaiterFeignClient;
@@ -46,7 +46,7 @@ public class KitchenServiceImpl implements KitchenService {
     @Override
     public Set<KitchenOrderResponse> getAllOrders() {
         log.debug("trying to get all orders");
-        List<KitchenOrder> setEntities = kitchenOrderRepository.findAllDistinct();
+        List<KitchenOrderEntity> setEntities = kitchenOrderRepository.findAllDistinct();
 
         var result = setEntities.stream()
                 .map(kitchenOrderMapper::toDto)
@@ -187,16 +187,16 @@ public class KitchenServiceImpl implements KitchenService {
 
         for (DishDto dishDto : order.getOrderDishes()) {
 
-            OrderToDish orderToDish = OrderToDish.builder()
+            OrderToDishEntity orderToDishEntity = OrderToDishEntity.builder()
                     .id(new CompositeOrderToDishId(order.getOrderIdWaiterService(),
                             getDishByShortName(dishDto.shortName()).id()))
-                    .dish(kitchenDishMapper.toEntity(getDishById(getDishByShortName(dishDto.shortName()).id())))
+                    .dishEntity(kitchenDishMapper.toEntity(getDishById(getDishByShortName(dishDto.shortName()).id())))
                     .order(kitchenOrderMapper.toEntity(getOrderById(order.getOrderIdWaiterService())))
                     .dishesNumber(dishDto.dishesNumber())
                     .build();
 
-            kitchenOrderToDishRepository.save(orderToDish);
-            log.debug("successfully created orderToDish with id: {}", orderToDish.getId());
+            kitchenOrderToDishRepository.save(orderToDishEntity);
+            log.debug("successfully created orderToDish with id: {}", orderToDishEntity.getId());
         }
     }
 

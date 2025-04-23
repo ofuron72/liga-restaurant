@@ -1,17 +1,17 @@
 package com.liga.converter;
 
 import com.liga.dto.DishDto;
-import com.liga.entities.Dish;
+import com.liga.entities.DishEntity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class KitchenDishMapperTest {
+class KitchenDishEntityMapperTest {
     private final KitchenDishMapper kitchenDishMapper = new KitchenDishMapperImpl();
 
     /**
      * Проверяет корректность маппинга сущности
-     * {@link Dish} в DTO {@link DishDto}.
+     * {@link DishEntity} в DTO {@link DishDto}.
      * <p>
      * given: Сущность блюда с заполненными полями.
      * when: Вызывается метод маппера `toDto`.
@@ -20,7 +20,7 @@ class KitchenDishMapperTest {
     @Test
     void testToDto_shouldMapCorrectly() {
         //given
-        Dish dish = Dish.builder()
+        DishEntity dishEntity = DishEntity.builder()
                 .id(1L)
                 .balance(10L)
                 .shortName("pizza")
@@ -28,17 +28,17 @@ class KitchenDishMapperTest {
                 .build();
 
         //when
-        DishDto dishDto = kitchenDishMapper.toDto(dish);
+        DishDto dishDto = kitchenDishMapper.toDto(dishEntity);
 
         //then
-        assertEquals(dish.getId(), dishDto.id());
-        assertEquals(dish.getBalance(), dishDto.balance());
-        assertEquals(dish.getShortName(), dishDto.shortName());
-        assertEquals(dish.getDishComposition(), dishDto.dishComposition());
+        assertEquals(dishEntity.getId(), dishDto.id());
+        assertEquals(dishEntity.getBalance(), dishDto.balance());
+        assertEquals(dishEntity.getShortName(), dishDto.shortName());
+        assertEquals(dishEntity.getDishComposition(), dishDto.dishComposition());
     }
 
     /**
-     * Проверяет корректность маппинга DTO {@link DishDto} в сущность {@link Dish}.
+     * Проверяет корректность маппинга DTO {@link DishDto} в сущность {@link DishEntity}.
      * <p>
      * given: DTO блюда с заданными значениями полей.
      * when: Вызывается метод маппера `toEntity`.
@@ -54,13 +54,13 @@ class KitchenDishMapperTest {
                 5L);
 
         //when
-        Dish dish = kitchenDishMapper.toEntity(dishDto);
+        DishEntity dishEntity = kitchenDishMapper.toEntity(dishDto);
 
         //then
-        assertEquals(dishDto.id(), dish.getId());
-        assertEquals(dishDto.balance(), dish.getBalance());
-        assertEquals(dishDto.shortName(), dish.getShortName());
-        assertEquals(dishDto.dishComposition(), dish.getDishComposition());
+        assertEquals(dishDto.id(), dishEntity.getId());
+        assertEquals(dishDto.balance(), dishEntity.getBalance());
+        assertEquals(dishDto.shortName(), dishEntity.getShortName());
+        assertEquals(dishDto.dishComposition(), dishEntity.getDishComposition());
     }
 
 }

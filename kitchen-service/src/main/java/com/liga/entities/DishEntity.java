@@ -21,7 +21,7 @@ import java.util.Set;
 @Setter
 @Builder
 @EqualsAndHashCode
-public class Dish {
+public class DishEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dish_id")
@@ -36,6 +36,6 @@ public class Dish {
     @Column(name = "dish_composition")
     private String dishComposition;
 
-    @OneToMany(mappedBy = "dish")
-    private Set<OrderToDish> orderDishes = new HashSet<>();
+    @OneToMany(mappedBy = "dishEntity")
+    private Set<OrderToDishEntity> orderDishes = new HashSet<>();
 }

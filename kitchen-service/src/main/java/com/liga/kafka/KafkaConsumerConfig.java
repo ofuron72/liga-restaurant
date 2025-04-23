@@ -15,12 +15,18 @@ public class KafkaConsumerConfig {
     @Value("${kafka.topic.name}")
     private String topicName;
 
+    @Value("${kafka.topic.partitions}")
+    private Integer partitions;
+
+    @Value("${kafka.topic.replicas}")
+    private Integer replicas;
+
 
     @Bean
     public NewTopic createTopic() {
         return TopicBuilder.name(topicName)
-                .partitions(1)
-                .replicas(1)
+                .partitions(partitions)
+                .replicas(replicas)
                 .build();
     }
 

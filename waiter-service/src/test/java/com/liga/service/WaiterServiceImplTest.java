@@ -3,9 +3,9 @@ package com.liga.service;
 import com.liga.converter.WaiterMenuDtoToResponseMapper;
 import com.liga.converter.WaiterOrderDtoToResponseMapper;
 import com.liga.converter.WaiterOrderStatusDtoToResponseMapper;
-import com.liga.entities.WaiterMenuItem;
+import com.liga.entities.WaiterMenuItemEntity;
 import com.liga.dto.WaiterMenuItemResponse;
-import com.liga.entities.WaiterOrder;
+import com.liga.entities.WaiterOrderEntity;
 import com.liga.dto.WaiterOrderResponse;
 import com.liga.dto.WaiterOrderStatusDto;
 import com.liga.dto.WaiterOrderStatusResponse;
@@ -52,13 +52,13 @@ class WaiterServiceImplTest {
     @InjectMocks
     private WaiterServiceImpl waiterService;
 
-    private WaiterOrder order;
+    private WaiterOrderEntity order;
     private WaiterOrderResponse waiterOrderResponse;
     private WaiterOrderStatusResponse waiterOrderStatusResponse;
 
     @BeforeEach
     void setUp() {
-        order = WaiterOrder.builder()
+        order = WaiterOrderEntity.builder()
                 .id(1L)
                 .status(OrderStatus.ACCEPTED)
                 .createDttm(OffsetDateTime.now())
@@ -139,7 +139,7 @@ class WaiterServiceImplTest {
         //given
 
         OffsetDateTime fixedTime = OffsetDateTime.now();
-        WaiterOrder order1 = WaiterOrder.builder()
+        WaiterOrderEntity order1 = WaiterOrderEntity.builder()
                 .id(1L)
                 .status(OrderStatus.ACCEPTED)
                 .createDttm(fixedTime)
@@ -147,7 +147,7 @@ class WaiterServiceImplTest {
                 .tableNo("A1")
                 .build();
 
-        WaiterOrder order2 = WaiterOrder.builder()
+        WaiterOrderEntity order2 = WaiterOrderEntity.builder()
                 .id(2L)
                 .status(OrderStatus.ACCEPTED)
                 .createDttm(fixedTime)
@@ -224,7 +224,7 @@ class WaiterServiceImplTest {
     void testCreateOrder() {
         //given
         OffsetDateTime fixedTime = OffsetDateTime.now();
-        WaiterOrder createdOrder = WaiterOrder.builder()
+        WaiterOrderEntity createdOrder = WaiterOrderEntity.builder()
                 .id(1L)
                 .waiterId(1L)
                 .tableNo("A1")
@@ -300,7 +300,7 @@ class WaiterServiceImplTest {
     @Test
     void testServeOrder() {
         //given
-        WaiterOrder createdOrder = WaiterOrder.builder()
+        WaiterOrderEntity createdOrder = WaiterOrderEntity.builder()
                 .id(1L)
                 .waiterId(1L)
                 .tableNo("A1")
@@ -323,7 +323,7 @@ class WaiterServiceImplTest {
     @Test
     void testCancelOrder() {
         //given
-        WaiterOrder createdOrder = WaiterOrder.builder()
+        WaiterOrderEntity createdOrder = WaiterOrderEntity.builder()
                 .id(1L)
                 .waiterId(1L)
                 .tableNo("A1")
@@ -347,13 +347,13 @@ class WaiterServiceImplTest {
     void testGetAllMenuItems_shouldReturnSetOfMenuItems() {
         //given
 
-        WaiterMenuItem createdMenuItem1 = WaiterMenuItem.builder()
+        WaiterMenuItemEntity createdMenuItem1 = WaiterMenuItemEntity.builder()
                 .id(1L)
                 .dish_name("Pizza")
                 .dish_cost(12.0)
                 .build();
 
-        WaiterMenuItem createdMenuItem2 = WaiterMenuItem.builder()
+        WaiterMenuItemEntity createdMenuItem2 = WaiterMenuItemEntity.builder()
                 .id(2L)
                 .dish_name("Salad")
                 .dish_cost(7.99)

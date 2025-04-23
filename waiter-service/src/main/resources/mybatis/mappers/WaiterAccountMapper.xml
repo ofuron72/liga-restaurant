@@ -3,7 +3,7 @@
 <mapper namespace="com.liga.repository.WaiterAccountMapper">
 
     <select id="existsById" resultType="boolean">
-        SELECT EXISTS(SELECT 1 FROM waiter_account WHERE waiter_id = #{id})
+        SELECT EXISTS(SELECT waiter_id FROM waiter_account WHERE waiter_id = #{id})
     </select>
 
 

@@ -3,7 +3,7 @@ package com.liga.controllers;
 
 import com.liga.dto.WaiterMenuItemResponse;
 import com.liga.dto.WaiterOrderCreateRequestDto;
-import com.liga.entities.WaiterOrder;
+import com.liga.entities.WaiterOrderEntity;
 import com.liga.dto.WaiterOrderResponse;
 import com.liga.dto.WaiterOrderStatusResponse;
 import com.liga.service.WaiterService;
@@ -178,24 +178,24 @@ public class WaiterOrderController {
     /**
      * endpoint для feign,
      *
-     * @param waiterOrder dto с данными о готовом заказе
+     * @param waiterOrderEntity dto с данными о готовом заказе
      */
     @Hidden
     @PostMapping("/cooked")
-    public ResponseEntity<Void> receiveCookedOrderFromKitchen(@RequestBody WaiterOrder waiterOrder) {
-        waiterService.serveOrder(waiterOrder);
+    public ResponseEntity<Void> receiveCookedOrderFromKitchen(@RequestBody WaiterOrderEntity waiterOrderEntity) {
+        waiterService.serveOrder(waiterOrderEntity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
      * endpoint для feign,
      *
-     * @param waiterOrder dto с данными об отмененном заказе
+     * @param waiterOrderEntity dto с данными об отмененном заказе
      */
     @Hidden
     @PostMapping("/rejected")
-    public ResponseEntity<Void> receiveRejectedOrderFromKitchen(@RequestBody WaiterOrder waiterOrder) {
-        waiterService.cancelOrder(waiterOrder);
+    public ResponseEntity<Void> receiveRejectedOrderFromKitchen(@RequestBody WaiterOrderEntity waiterOrderEntity) {
+        waiterService.cancelOrder(waiterOrderEntity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

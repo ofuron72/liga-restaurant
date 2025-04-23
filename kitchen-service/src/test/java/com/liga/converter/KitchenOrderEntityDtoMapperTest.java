@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class KitchenOrderDtoMapperTest {
+class KitchenOrderEntityDtoMapperTest {
     private final KitchenOrderDtoMapper mapper = Mappers.getMapper(KitchenOrderDtoMapper.class);
 
     /**

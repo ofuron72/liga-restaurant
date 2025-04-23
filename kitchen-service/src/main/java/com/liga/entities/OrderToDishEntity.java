@@ -22,7 +22,7 @@ import lombok.Builder;
 @Builder
 @ToString
 @Table(name = "order_to_dish")
-public class OrderToDish {
+public class OrderToDishEntity {
 
     @EmbeddedId
     private CompositeOrderToDishId id;
@@ -30,12 +30,12 @@ public class OrderToDish {
     @MapsId("dishId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "dish_id")
-    private Dish dish;
+    private DishEntity dishEntity;
 
     @MapsId("orderId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "kitchen_order_id")
-    private KitchenOrder order;
+    private KitchenOrderEntity order;
 
     @Column(name = "dishes_number")
     private Long dishesNumber;

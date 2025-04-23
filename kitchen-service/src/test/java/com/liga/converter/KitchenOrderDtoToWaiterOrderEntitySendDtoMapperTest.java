@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-class KitchenOrderDtoToWaiterOrderSendDtoMapperTest {
+
+class KitchenOrderDtoToWaiterOrderEntitySendDtoMapperTest {
 
     private final KitchenOrderDtoToWaiterOrderSendDtoMapper mapper =
             Mappers.getMapper(KitchenOrderDtoToWaiterOrderSendDtoMapper.class);

@@ -37,6 +37,8 @@ kafka:
   topic:
     name:
       createOrderTopic
+    partitions: 1
+    replicas: 1
 
 
 

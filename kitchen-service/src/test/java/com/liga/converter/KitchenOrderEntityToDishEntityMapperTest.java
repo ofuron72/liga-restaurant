@@ -2,17 +2,17 @@ package com.liga.converter;
 
 import com.liga.dto.OrderToDishDto;
 import com.liga.entities.CompositeOrderToDishId;
-import com.liga.entities.OrderToDish;
+import com.liga.entities.OrderToDishEntity;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class KitchenOrderToDishMapperTest {
+class KitchenOrderEntityToDishEntityMapperTest {
     private final KitchenOrderToDishMapper mapper = Mappers.getMapper(KitchenOrderToDishMapper.class);
 
     /**
-     * Проверяет корректность маппинга из {@link OrderToDish} в {@link OrderToDishDto}.
+     * Проверяет корректность маппинга из {@link OrderToDishEntity} в {@link OrderToDishDto}.
      * <p>
      * given: Сущность OrderToDish с составным ID и количеством блюд.
      * when: Выполняется преобразование в DTO через метод `toDto`.
@@ -22,7 +22,7 @@ class KitchenOrderToDishMapperTest {
     void testToDto_shouldMapCorrectly() {
         //given
         CompositeOrderToDishId id = new CompositeOrderToDishId(1L, 10L);
-        OrderToDish entity = OrderToDish.builder()
+        OrderToDishEntity entity = OrderToDishEntity.builder()
                 .id(id)
                 .dishesNumber(5L)
                 .build();
@@ -37,7 +37,7 @@ class KitchenOrderToDishMapperTest {
     }
 
     /**
-     * Проверяет корректность маппинга из {@link OrderToDishDto} в {@link OrderToDish}.
+     * Проверяет корректность маппинга из {@link OrderToDishDto} в {@link OrderToDishEntity}.
      * <p>
      * given: DTO с kitchenOrderId, dishId и количеством блюд.
      * when: DTO маппится в сущность OrderToDish.
@@ -49,7 +49,7 @@ class KitchenOrderToDishMapperTest {
         OrderToDishDto dto = new OrderToDishDto(2L, 2L, 3L);
 
         //when
-        OrderToDish entity = mapper.toEntity(dto);
+        OrderToDishEntity entity = mapper.toEntity(dto);
 
         //then
         assertNotNull(entity.getId());

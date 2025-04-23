@@ -5,6 +5,8 @@ import java.io.IOException;
 
 /**
  * Нарушение принципа interface segregation
+ *
+ *Interface Operations, содержит методы, которые следует разделить по разным интерфейсам
  */
 public class BankAccount implements Operations {
     private String firstname;

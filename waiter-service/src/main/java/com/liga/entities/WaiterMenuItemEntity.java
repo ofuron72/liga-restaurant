@@ -18,7 +18,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 @Builder
-public class WaiterMenuItem {
+public class WaiterMenuItemEntity {
     Long id;
     String dish_name;
     Double dish_cost;

@@ -2,7 +2,7 @@ package com.liga.converter;
 
 import com.liga.dto.CreateOrderEvent;
 import com.liga.dto.DishSendDto;
-import com.liga.entities.WaiterOrder;
+import com.liga.entities.WaiterOrderEntity;
 import com.liga.objects.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class WaiterOrderDtoToKitchenSendMapperTest {
+class WaiterOrderEntityDtoToKitchenSendMapperTest {
 
     private final WaiterOrderDtoToKitchenSendDtoMapper mapper =
             Mappers.getMapper(WaiterOrderDtoToKitchenSendDtoMapper.class);
@@ -31,7 +31,7 @@ class WaiterOrderDtoToKitchenSendMapperTest {
         DishSendDto dish1 = new DishSendDto("pizza", 1L);
         DishSendDto dish2 = new DishSendDto("pasta", 2L);
 
-        WaiterOrder waiterOrder = WaiterOrder.builder()
+        WaiterOrderEntity waiterOrderEntity = WaiterOrderEntity.builder()
                 .id(1L)
                 .waiterId(1L)
                 .status(OrderStatus.ACCEPTED)
@@ -41,12 +41,12 @@ class WaiterOrderDtoToKitchenSendMapperTest {
                 .build();
 
         //when
-        CreateOrderEvent result = mapper.map(waiterOrder);
+        CreateOrderEvent result = mapper.map(waiterOrderEntity);
 
         //then
         assertNotNull(result);
-        assertEquals(waiterOrder.getWaiterId(), result.waiterOrderNo());
-        assertEquals(waiterOrder.getId(), result.orderIdWaiterService());
+        assertEquals(waiterOrderEntity.getWaiterId(), result.waiterOrderNo());
+        assertEquals(waiterOrderEntity.getId(), result.orderIdWaiterService());
         assertNotNull(result.dishes());
         assertEquals(2, result.dishes().size());
         assertTrue(result.dishes().containsAll(List.of(dish1, dish2)));

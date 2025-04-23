@@ -22,7 +22,7 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class WaiterOrder {
+public class WaiterOrderEntity {
     private Long id;
 
     private OrderStatus status;

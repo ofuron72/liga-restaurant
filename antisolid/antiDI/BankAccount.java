@@ -2,6 +2,8 @@ package antiDI;
 
 /**
  * Демонстрация нарушения DIP
+ * BankAccount зависит от конкретной реализации Email,
+ * верхний уровень зависит от нижнего
  */
 public class BankAccount {
     private String firstname;

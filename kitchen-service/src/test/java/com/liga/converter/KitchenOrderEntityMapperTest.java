@@ -1,7 +1,7 @@
 package com.liga.converter;
 
 import com.liga.dto.KitchenOrderDto;
-import com.liga.entities.KitchenOrder;
+import com.liga.entities.KitchenOrderEntity;
 import com.liga.objects.KitchenStatus;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -10,11 +10,11 @@ import java.time.ZonedDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class KitchenOrderMapperTest {
+class KitchenOrderEntityMapperTest {
     private final KitchenOrderMapper mapper = Mappers.getMapper(KitchenOrderMapper.class);
 
     /**
-     * Проверяет корректность маппинга из {@link KitchenOrder} в {@link KitchenOrderDto}.
+     * Проверяет корректность маппинга из {@link KitchenOrderEntity} в {@link KitchenOrderDto}.
      * <p>
      * given: Сущность KitchenOrder с установленными полями.
      * when: Выполняется преобразование через метод `toDto`.
@@ -23,7 +23,7 @@ class KitchenOrderMapperTest {
     @Test
     void testToDto_shouldMapFieldsCorrectly() {
         //given
-        KitchenOrder order = KitchenOrder.builder()
+        KitchenOrderEntity order = KitchenOrderEntity.builder()
                 .id(1L)
                 .waiterOrderNo(1L)
                 .status(KitchenStatus.ACCEPTED)
@@ -43,7 +43,7 @@ class KitchenOrderMapperTest {
     }
 
     /**
-     * Проверяет корректность маппинга из {@link KitchenOrderDto} в {@link KitchenOrder}.
+     * Проверяет корректность маппинга из {@link KitchenOrderDto} в {@link KitchenOrderEntity}.
      * <p>
      * given: DTO объект KitchenOrderDto с заполненными полями.
      * when: Выполняется преобразование через метод `toEntity`.
@@ -60,7 +60,7 @@ class KitchenOrderMapperTest {
                 .build();
 
         //when
-        KitchenOrder entity = mapper.toEntity(dto);
+        KitchenOrderEntity entity = mapper.toEntity(dto);
 
         //then
         assertNotNull(entity);

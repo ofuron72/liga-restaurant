@@ -8,9 +8,9 @@ import com.liga.dto.DishDto;
 import com.liga.dto.KitchenOrderDto;
 import com.liga.dto.KitchenOrderResponse;
 import com.liga.dto.WaiterOrderSendDto;
-import com.liga.entities.Dish;
-import com.liga.entities.KitchenOrder;
-import com.liga.entities.OrderToDish;
+import com.liga.entities.DishEntity;
+import com.liga.entities.KitchenOrderEntity;
+import com.liga.entities.OrderToDishEntity;
 import com.liga.exceptions.DishNotFoundException;
 import com.liga.exceptions.OrderNotFoundException;
 
@@ -58,19 +58,19 @@ class KitchenServiceImplTest {
     @InjectMocks
     private KitchenServiceImpl kitchenService;
 
-    private KitchenOrder kitchenOrder;
+    private KitchenOrderEntity kitchenOrderEntity;
     private KitchenOrderDto kitchenOrderDto;
     private DishDto dishDto;
-    private Dish dish;
+    private DishEntity dishEntity;
 
     @BeforeEach
     void setUp() {
-        OrderToDish orderToDish = new OrderToDish();
-        kitchenOrder = KitchenOrder.builder()
+        OrderToDishEntity orderToDishEntity = new OrderToDishEntity();
+        kitchenOrderEntity = KitchenOrderEntity.builder()
                 .id(1L)
                 .orderIdWaiterService(1L)
                 .waiterOrderNo(1L)
-                .orderDishes(Set.of(orderToDish))
+                .orderDishes(Set.of(orderToDishEntity))
                 .build();
         kitchenOrderDto = KitchenOrderDto
                 .builder()
@@ -86,7 +86,7 @@ class KitchenServiceImplTest {
                 1L
         );
         kitchenOrderDto.setOrderDishes(Set.of(dishDto));
-        dish = Dish.builder()
+        dishEntity = DishEntity.builder()
                 .id(1L)
                 .balance(10L)
                 .dishComposition("tomato, cheese")
@@ -103,14 +103,14 @@ class KitchenServiceImplTest {
     @Test
     void testGetAllOrders_shouldReturnSetOfOrders() {
         //given
-        KitchenOrder order1 = KitchenOrder.builder()
+        KitchenOrderEntity order1 = KitchenOrderEntity.builder()
                 .id(1L)
                 .status(KitchenStatus.ACCEPTED)
                 .waiterOrderNo(1L)
                 .orderIdWaiterService(1L)
                 .build();
 
-        KitchenOrder order2 = KitchenOrder.builder()
+        KitchenOrderEntity order2 = KitchenOrderEntity.builder()
                 .id(2L)
                 .status(KitchenStatus.ACCEPTED)
                 .waiterOrderNo(2L)
@@ -221,7 +221,7 @@ class KitchenServiceImplTest {
         );
         //создание шпионского сервиса
         KitchenService kitchenServiceSpy = Mockito.spy(realService);
-        KitchenOrder order = KitchenOrder.builder()
+        KitchenOrderEntity order = KitchenOrderEntity.builder()
                 .id(1L)
                 .status(KitchenStatus.ACCEPTED)
                 .waiterOrderNo(1L)
@@ -283,7 +283,7 @@ class KitchenServiceImplTest {
                 kitchenOrderDtoToResponseMapper
         );
         KitchenService kitchenServiceSpy = Mockito.spy(realService);
-        KitchenOrder order = KitchenOrder.builder()
+        KitchenOrderEntity order = KitchenOrderEntity.builder()
                 .id(1L)
                 .status(KitchenStatus.ACCEPTED)
                 .waiterOrderNo(1L)
@@ -500,8 +500,8 @@ class KitchenServiceImplTest {
         Long orderId = 1L;
 
         when(kitchenOrderRepository.findById(orderId))
-                .thenReturn(Optional.of(kitchenOrder));
-        when(kitchenOrderMapper.toDto(kitchenOrder))
+                .thenReturn(Optional.of(kitchenOrderEntity));
+        when(kitchenOrderMapper.toDto(kitchenOrderEntity))
                 .thenReturn(kitchenOrderDto);
 
         //when
@@ -548,8 +548,8 @@ class KitchenServiceImplTest {
         //given
         String shortName = "PIZZA";
 
-        when(kitchenDishRepository.findByShortName(shortName)).thenReturn(Optional.of(dish));
-        when(kitchenDishMapper.toDto(dish)).thenReturn(dishDto);
+        when(kitchenDishRepository.findByShortName(shortName)).thenReturn(Optional.of(dishEntity));
+        when(kitchenDishMapper.toDto(dishEntity)).thenReturn(dishDto);
 
         //when
         DishDto resultDto = kitchenService.getDishByShortName(shortName);
@@ -595,8 +595,8 @@ class KitchenServiceImplTest {
         //given
         Long dishId = 1L;
 
-        when(kitchenDishRepository.findById(dishId)).thenReturn(Optional.of(dish));
-        when(kitchenDishMapper.toDto(dish)).thenReturn(dishDto);
+        when(kitchenDishRepository.findById(dishId)).thenReturn(Optional.of(dishEntity));
+        when(kitchenDishMapper.toDto(dishEntity)).thenReturn(dishDto);
 
         //when
         DishDto resultDto = kitchenService.getDishById(dishId);
@@ -644,11 +644,11 @@ class KitchenServiceImplTest {
         KitchenOrderDto orderDto = new KitchenOrderDto();
         orderDto.setOrderDishes(Set.of(dto));
 
-        Dish availableDish = new Dish();
-        availableDish.setShortName("PIZZA");
+        DishEntity availableDishEntity = new DishEntity();
+        availableDishEntity.setShortName("PIZZA");
 
-        when(kitchenDishRepository.findAllDistinct()).thenReturn(List.of(availableDish));
-        when(kitchenDishMapper.toDto(availableDish)).thenReturn(dto);
+        when(kitchenDishRepository.findAllDistinct()).thenReturn(List.of(availableDishEntity));
+        when(kitchenDishMapper.toDto(availableDishEntity)).thenReturn(dto);
         //when
         boolean result = kitchenService.dishesIsAvailable(orderDto);
 
@@ -671,11 +671,11 @@ class KitchenServiceImplTest {
         KitchenOrderDto orderDto = new KitchenOrderDto();
         orderDto.setOrderDishes(Set.of(orderedDish));
 
-        Dish availableDish = new Dish();
-        availableDish.setShortName("pizza");
+        DishEntity availableDishEntity = new DishEntity();
+        availableDishEntity.setShortName("pizza");
 
-        when(kitchenDishRepository.findAllDistinct()).thenReturn(List.of(availableDish));
-        when(kitchenDishMapper.toDto(availableDish)).thenReturn(
+        when(kitchenDishRepository.findAllDistinct()).thenReturn(List.of(availableDishEntity));
+        when(kitchenDishMapper.toDto(availableDishEntity)).thenReturn(
                 new DishDto(1L, 10L, "pizza", "tomato", 1L)
         );
         //when

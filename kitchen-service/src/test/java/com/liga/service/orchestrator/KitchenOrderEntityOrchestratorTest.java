@@ -20,10 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class KitchenOrderOrchestratorTest {
+class KitchenOrderEntityOrchestratorTest {
 
-    KitchenOrderDto dto;
-    WaiterOrderSendDto sendDto;
+    private KitchenOrderDto dto;
+    private WaiterOrderSendDto sendDto;
     @Mock
     private WaiterFeignClient waiterFeignClient;
     @Mock

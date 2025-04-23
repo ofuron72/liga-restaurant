@@ -1,7 +1,7 @@
 package com.liga.controllers;
 
 import com.liga.WaiterServiceApplication;
-import com.liga.entities.WaiterOrder;
+import com.liga.entities.WaiterOrderEntity;
 import com.liga.objects.OrderStatus;
 import com.liga.repository.WaiterOrderMapper;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ import java.time.OffsetDateTime;
 @Testcontainers
 @ActiveProfiles("integration-test")
 @TestPropertySource(locations = "classpath:application-integration-test.yaml")
-class WaiterOrderControllerTest {
+class WaiterOrderEntityControllerTest {
 
     @Container
     static PostgreSQLContainer<?> postgresContainer =
@@ -67,7 +67,7 @@ class WaiterOrderControllerTest {
     @Test
     void getOrderById_shouldReturnOrder_whenOrderIsExists() throws Exception {
         //given
-        WaiterOrder orderCreated = new WaiterOrder(null,
+        WaiterOrderEntity orderCreated = new WaiterOrderEntity(null,
                 OrderStatus.ACCEPTED,
                 OffsetDateTime.now(),
                 1L,

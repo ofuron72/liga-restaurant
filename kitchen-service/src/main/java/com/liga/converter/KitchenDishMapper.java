@@ -1,16 +1,16 @@
 package com.liga.converter;
 
 import com.liga.dto.DishDto;
-import com.liga.entities.Dish;
+import com.liga.entities.DishEntity;
 import org.mapstruct.Mapper;
 
 /**
- * Маппер для преобразования между сущностью {@link Dish} и DTO {@link DishDto}.
+ * Маппер для преобразования между сущностью {@link DishEntity} и DTO {@link DishDto}.
  */
 @Mapper
 public interface KitchenDishMapper {
 
-    DishDto toDto(Dish dish);
+    DishDto toDto(DishEntity dishEntity);
 
-    Dish toEntity(DishDto dishDto);
+    DishEntity toEntity(DishDto dishDto);
 }

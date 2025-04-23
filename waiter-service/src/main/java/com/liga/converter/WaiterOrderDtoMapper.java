@@ -1,7 +1,7 @@
 package com.liga.converter;
 
 import com.liga.dto.WaiterOrderCreateRequestDto;
-import com.liga.entities.WaiterOrder;
+import com.liga.entities.WaiterOrderEntity;
 import org.mapstruct.Mapper;
 
 /**
@@ -10,5 +10,5 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface WaiterOrderDtoMapper {
 
-    WaiterOrder toWaiterOrderDto(WaiterOrderCreateRequestDto waiterOrderDto);
+    WaiterOrderEntity toWaiterOrderDto(WaiterOrderCreateRequestDto waiterOrderDto);
 }

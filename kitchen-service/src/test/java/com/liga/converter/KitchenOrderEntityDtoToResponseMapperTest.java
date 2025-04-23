@@ -8,7 +8,7 @@ import org.mapstruct.factory.Mappers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class KitchenOrderDtoToResponseMapperTest {
+class KitchenOrderEntityDtoToResponseMapperTest {
     private final KitchenOrderDtoToResponseMapper mapper = Mappers.getMapper(KitchenOrderDtoToResponseMapper.class);
 
     /**
