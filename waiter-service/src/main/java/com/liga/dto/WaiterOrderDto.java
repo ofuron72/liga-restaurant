@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
+import lombok.Builder;
 
 import java.time.OffsetDateTime;
 
@@ -18,6 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+@Builder
 public class WaiterOrderDto {
     private Long id;
 

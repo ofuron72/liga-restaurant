@@ -1,12 +1,12 @@
 package com.liga.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;
+import lombok.Builder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode
 public class Dish {
     @Id

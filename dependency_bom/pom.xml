@@ -40,10 +40,24 @@
         <jaxb.version>4.0.5</jaxb.version>
         <spring.cloud.starter.openfeign.version>4.2.0</spring.cloud.starter.openfeign.version>
         <spring.kafka.version>3.2.4</spring.kafka.version>
+        <springdoc.openapi.starter.version>2.8.0</springdoc.openapi.starter.version>
+        <!--        test-->
+        <spring.boot.starter.test.version>3.2.10</spring.boot.starter.test.version>
+        <postgres.testcontainers.version>1.20.6</postgres.testcontainers.version>
+        <testcontainers.version>1.20.6</testcontainers.version>
+        <testcontainers.junit.jupiterversion>1.20.6</testcontainers.junit.jupiterversion>
+        <testcontainers.kafka.version>1.19.1</testcontainers.kafka.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.starter.test.version}</version>
+                <scope>test</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -155,6 +169,41 @@
                 <groupId>org.springframework.kafka</groupId>
                 <artifactId>spring-kafka</artifactId>
                 <version>${spring.kafka.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.openapi.starter.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgres.testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${testcontainers.junit.jupiterversion}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>kafka</artifactId>
+                <version>${testcontainers.kafka.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>

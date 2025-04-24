@@ -1,0 +1,14 @@
+{
+  "waiterId": 1,
+  "tableNo": "C1",
+  "dishes": [
+    {
+      "shortName": "Salad",
+      "dishesNumber": 1
+    },
+    {
+      "shortName": "Pizza",
+      "dishesNumber": 3
+    }
+  ]
+}

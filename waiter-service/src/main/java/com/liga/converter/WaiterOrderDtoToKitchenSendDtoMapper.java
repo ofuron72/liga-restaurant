@@ -11,4 +11,5 @@ public interface WaiterOrderDtoToKitchenSendDtoMapper {
     @Mapping(source = "waiterId", target = "waiterOrderNo")
     @Mapping(source = "id", target = "orderIdWaiterService")
     CreateOrderEvent map(WaiterOrderDto waiterOrderDto);
+
 }
