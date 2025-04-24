@@ -10,7 +10,6 @@ import com.liga.dto.KitchenOrderResponse;
 import com.liga.entities.CompositeOrderToDishId;
 import com.liga.entities.KitchenOrderEntity;
 import com.liga.entities.OrderToDishEntity;
-import com.liga.exceptions.DishNotFoundException;
 import com.liga.exceptions.OrderNotFoundException;
 import com.liga.feign.WaiterFeignClient;
 import com.liga.objects.KitchenStatus;
@@ -42,6 +41,7 @@ public class KitchenServiceImpl implements KitchenService {
     private final WaiterFeignClient waiterFeignClient;
     private final KitchenOrderRepository kitchenOrderRepository;
     private final KitchenOrderDtoToResponseMapper kitchenOrderDtoToResponseMapper;
+    private final DishService dishService;
 
     @Override
     public Set<KitchenOrderResponse> getAllOrders() {
@@ -133,23 +133,6 @@ public class KitchenServiceImpl implements KitchenService {
         return result;
     }
 
-    public DishDto getDishByShortName(String shortName) {
-        log.debug("trying to get dish by short name");
-        var result = kitchenDishMapper.toDto(kitchenDishRepository.findByShortName(shortName)
-                .orElseThrow(() -> new DishNotFoundException(String.format("Dish with shortName %s not found", shortName))));
-        log.debug("successfully retrieved dish with shortname: {}", shortName);
-        return result;
-    }
-
-    @Override
-    public DishDto getDishById(Long id) {
-        log.debug("trying to get Dish by id");
-        var result = kitchenDishMapper.toDto(kitchenDishRepository.findById(id)
-                .orElseThrow(() -> new DishNotFoundException(String.format("Dish with id %s not found", id))));
-        log.debug("successfully retrieved dish with id: {}", id);
-        return result;
-    }
-
     /**
      * Проверяет, доступны ли все блюда из заказа в текущем списке блюд на кухне.
      * Метод получает уникальные короткие имена всех блюд, доступных на кухне,
@@ -189,8 +172,10 @@ public class KitchenServiceImpl implements KitchenService {
 
             OrderToDishEntity orderToDishEntity = OrderToDishEntity.builder()
                     .id(new CompositeOrderToDishId(order.getOrderIdWaiterService(),
-                            getDishByShortName(dishDto.shortName()).id()))
-                    .dishEntity(kitchenDishMapper.toEntity(getDishById(getDishByShortName(dishDto.shortName()).id())))
+                            dishService.getDishByShortName(dishDto.shortName()).id()))
+                    .dishEntity(kitchenDishMapper.toEntity(dishService
+                            .getDishById(dishService
+                                    .getDishByShortName(dishDto.shortName()).id())))
                     .order(kitchenOrderMapper.toEntity(getOrderById(order.getOrderIdWaiterService())))
                     .dishesNumber(dishDto.dishesNumber())
                     .build();
