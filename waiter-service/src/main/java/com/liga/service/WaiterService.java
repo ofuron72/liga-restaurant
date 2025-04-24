@@ -1,18 +1,20 @@
 package com.liga.service;
 
 import com.liga.dto.WaiterOrderDto;
+import com.liga.dto.WaiterOrderResponse;
 import com.liga.dto.WaiterOrderStatusDto;
+import com.liga.dto.WaiterOrderStatusResponse;
 
 import java.util.Set;
 
 public interface WaiterService {
-    WaiterOrderDto getOrderById(Long id);
+    WaiterOrderResponse getOrderById(Long id);
 
-    Set<WaiterOrderDto> getAllOrders();
+    Set<WaiterOrderResponse> getAllOrders();
 
     WaiterOrderDto createOrder(WaiterOrderDto order);
 
-    WaiterOrderStatusDto getOrderStatus(Long id);
+    WaiterOrderStatusResponse getOrderStatus(Long id);
 
     void serveOrder(WaiterOrderDto order);
 

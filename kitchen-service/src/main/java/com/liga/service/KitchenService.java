@@ -3,11 +3,12 @@ package com.liga.service;
 
 import com.liga.dto.DishDto;
 import com.liga.dto.KitchenOrderDto;
+import com.liga.dto.KitchenOrderResponse;
 
 import java.util.Set;
 
 public interface KitchenService {
-    Set<KitchenOrderDto> getAllOrders();
+    Set<KitchenOrderResponse> getAllOrders();
 
     void acceptOrder(Long orderId);
 

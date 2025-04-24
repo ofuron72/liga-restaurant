@@ -1,10 +1,16 @@
 package com.liga.controllers;
 
-import com.liga.dto.KitchenOrderDto;
-import com.liga.dto.ResponseDto;
+import com.liga.dto.KitchenOrderResponse;
+import com.liga.dto.ResponseMessage;
 import com.liga.service.KitchenService;
 import com.liga.service.orchestrator.KitchenOrderOrchestrator;
-import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,42 +25,55 @@ public class KitchenOrderController {
     private final KitchenService kitchenService;
     private final KitchenOrderOrchestrator kitchenOrderOrchestrator;
 
+    @Operation(
+            summary = "get all orders",
+            description = "get list of all orders in the kitchen",
+            operationId = "getAllKitchenOrders"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Orders retrieved",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = KitchenOrderResponse.class))
+                    )
+            )
+    })
     @GetMapping
-    public ResponseEntity<Set<KitchenOrderDto>> getAllOrders() {
-        Set<KitchenOrderDto> orders = kitchenService.getAllOrders();
+    public ResponseEntity<Set<KitchenOrderResponse>> getAllOrders() {
+        Set<KitchenOrderResponse> orders = kitchenService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/setAccess")
-    public ResponseEntity<ResponseDto> setAccessStatus(@PathVariable Long id) {
-        kitchenService.acceptOrder(id);
-        return new ResponseEntity<>(new ResponseDto(String
-                .format("status order with id: %d changed -> ACCESS", id))
-                , HttpStatus.OK);
-    }
 
+    @Operation(
+            summary = "Set order status to READY",
+            description = "Marks the order as ready and sends the updated status to the waiter-service",
+            operationId = "setOrderReadyStatus",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Order status successfully changed to READY",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ResponseMessage.class),
+                                    examples = @ExampleObject(value = "status order with id: 1 changed -> READY")
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Order not found"
+                    )
+            }
+    )
     @PostMapping("/{id}/setReady")
-    public ResponseEntity<ResponseDto> setReadyStatus(@PathVariable Long id) {
+    public ResponseEntity<ResponseMessage> setReadyStatus(@PathVariable Long id) {
 
         kitchenOrderOrchestrator.setCookedAndSendOrder(id);
-        return new ResponseEntity<>(new ResponseDto(String
+        return new ResponseEntity<>(new ResponseMessage(String
                 .format("status order with id: %d changed -> READY", id))
                 , HttpStatus.OK);
     }
-
-    @PostMapping("/{id}/setReject")
-    public ResponseEntity<ResponseDto> setRejectStatus(@PathVariable Long id) {
-        kitchenService.rejectOrder(id);
-        return new ResponseEntity<>(new ResponseDto(String
-                .format("status order with id: %d changed -> REJECT", id)), HttpStatus.OK);
-    }
-
-    @PostMapping
-    public ResponseEntity<Void> createOrder(@RequestBody @Valid KitchenOrderDto kitchenOrderDto) {
-        kitchenService.createOrder(kitchenOrderDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-
 
 }

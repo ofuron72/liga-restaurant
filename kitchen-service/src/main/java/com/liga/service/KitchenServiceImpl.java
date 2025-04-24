@@ -1,10 +1,12 @@
 package com.liga.service;
 
 import com.liga.converter.KitchenDishMapper;
+import com.liga.converter.KitchenOrderDtoToResponseMapper;
 import com.liga.converter.KitchenOrderDtoToWaiterOrderSendDtoMapper;
 import com.liga.converter.KitchenOrderMapper;
 import com.liga.dto.DishDto;
 import com.liga.dto.KitchenOrderDto;
+import com.liga.dto.KitchenOrderResponse;
 import com.liga.entities.CompositeOrderToDishId;
 import com.liga.entities.KitchenOrder;
 import com.liga.entities.OrderToDish;
@@ -16,12 +18,14 @@ import com.liga.repository.KitchenDishRepository;
 import com.liga.repository.KitchenOrderRepository;
 import com.liga.repository.KitchenOrderToDishRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KitchenServiceImpl implements KitchenService {
@@ -32,14 +36,19 @@ public class KitchenServiceImpl implements KitchenService {
     private final KitchenOrderDtoToWaiterOrderSendDtoMapper kitchenOrderDtoToWaiterOrderSendDtoMapper;
     private final WaiterFeignClient waiterFeignClient;
     private final KitchenOrderRepository kitchenOrderRepository;
+    private final KitchenOrderDtoToResponseMapper kitchenOrderDtoToResponseMapper;
 
     @Override
-    public Set<KitchenOrderDto> getAllOrders() {
+    public Set<KitchenOrderResponse> getAllOrders() {
+        log.debug("trying to get all orders");
         List<KitchenOrder> setEntities = kitchenOrderRepository.findAllDistinct();
 
-        return setEntities.stream()
+        var result = setEntities.stream()
                 .map(kitchenOrderMapper::toDto)
+                .map(kitchenOrderDtoToResponseMapper::mapDtoToResponse)
                 .collect(Collectors.toSet());
+        log.debug("getAllOrders returned {} orders", result.size());
+        return result;
     }
 
     /**
@@ -54,14 +63,18 @@ public class KitchenServiceImpl implements KitchenService {
      */
     @Override
     public void createOrder(KitchenOrderDto order) {
+        log.debug("trying to create order {}", order);
 
         order.setStatus(KitchenStatus.CREATED);
 
         kitchenOrderRepository.save(kitchenOrderMapper.toEntity(order));
 
-        if (dishesIsAvailable(order)) {
 
+        log.debug("Order saved {}", order);
+        if (dishesIsAvailable(order)) {
+            log.debug("dishes available {}", order.getOrderDishes());
             createOrderToDish(order);
+            log.debug("created order-to-dish relationship for waiterOrderId: {}", order.getOrderIdWaiterService());
 
             acceptOrder(order.getOrderIdWaiterService());
         } else {
@@ -71,46 +84,67 @@ public class KitchenServiceImpl implements KitchenService {
 
     @Override
     public void acceptOrder(Long orderId) {
+        log.debug("trying to accept order with id: {}", orderId);
         if (!kitchenOrderRepository.existsById(orderId)) {
+            log.error("Order with id {} does not exist. Cannot accept", orderId);
             throw new OrderNotFoundException(String.format("Order with id %s not found", orderId));
         }
         kitchenOrderRepository.updateStatusById(orderId, KitchenStatus.ACCEPTED);
-
+        log.debug("order with id {} mark as ACCEPTED", orderId);
     }
 
     @Override
     public void rejectOrder(Long orderId) {
+        log.debug("trying to reject order with id: {}", orderId);
         if (!kitchenOrderRepository.existsById(orderId)) {
+            log.error("Order with id {} does not exist. Cannot reject", orderId);
             throw new OrderNotFoundException(String.format("Order with id %s not found", orderId));
         }
+
         kitchenOrderRepository.updateStatusById(orderId, KitchenStatus.REJECTED);
+        log.debug("order with id {} mark as REJECTED", orderId);
+
+        log.debug("Sending rejected order with id={} to waiter service", orderId);
         waiterFeignClient.sendCanceledOrderToWaiter(kitchenOrderDtoToWaiterOrderSendDtoMapper
                 .map(getOrderById(orderId)));
+        log.debug("Rejected order with id={} sent to waiter service", orderId);
     }
 
     @Override
     public void setStatusReady(Long orderId) {
+        log.debug("trying to set status ready for order with id: {}", orderId);
         if (!kitchenOrderRepository.existsById(orderId)) {
+            log.error("Order with id={} not found. Cannot set status to COOKED.", orderId);
             throw new OrderNotFoundException(String.format("Order with id %s not found", orderId));
         }
         kitchenOrderRepository.updateStatusById(orderId, KitchenStatus.COOKED);
+        log.debug("Order with id={} marked as COOKED", orderId);
     }
 
     @Override
     public KitchenOrderDto getOrderById(Long orderId) {
-        return kitchenOrderMapper.toDto(kitchenOrderRepository.findById(orderId)
+        log.debug("trying to get order by id: {}", orderId);
+        var result = kitchenOrderMapper.toDto(kitchenOrderRepository.findById(orderId)
                 .orElseThrow(()-> new OrderNotFoundException(String.format("Order with id %s not found", orderId))));
+        log.debug("successfully retrieved order with id: {}", orderId);
+        return result;
     }
 
     public DishDto getDishByShortName(String shortName) {
-        return kitchenDishMapper.toDto(kitchenDishRepository.findByShortName(shortName)
+        log.debug("trying to get dish by short name: {}", shortName);
+        var result = kitchenDishMapper.toDto(kitchenDishRepository.findByShortName(shortName)
                 .orElseThrow(() -> new DishNotFoundException(String.format("Dish with shortName %s not found", shortName))));
+        log.debug("successfully retrieved dish with shortname: {}", shortName);
+        return result;
     }
 
     @Override
     public DishDto getDishById(Long id) {
-        return kitchenDishMapper.toDto(kitchenDishRepository.findById(id)
+        log.debug("trying to get Dish by id: {}", id);
+        var result = kitchenDishMapper.toDto(kitchenDishRepository.findById(id)
                 .orElseThrow(() -> new DishNotFoundException(String.format("Dish with id %s not found", id))));
+        log.debug("successfully retrieved dish with id: {}", id);
+        return result;
     }
 
     /**
@@ -127,6 +161,7 @@ public class KitchenServiceImpl implements KitchenService {
      */
     @Override
     public Boolean dishesIsAvailable(KitchenOrderDto order) {
+        log.debug("trying to check available of dishes: {}", order.getOrderDishes());
 
         Set<String> dishDtoSet = kitchenDishRepository.findAllDistinct()
                 .stream()
@@ -134,10 +169,12 @@ public class KitchenServiceImpl implements KitchenService {
                 .map(DishDto::shortName)
                 .collect(Collectors.toSet());
 
-        return dishDtoSet.containsAll(order.getOrderDishes()
+        var result = dishDtoSet.containsAll(order.getOrderDishes()
                 .stream()
                 .map(DishDto::shortName)
                 .collect(Collectors.toSet()));
+        log.debug("dishes: {} available: {}", dishDtoSet, result);
+        return result;
     }
 
     /**
@@ -148,6 +185,7 @@ public class KitchenServiceImpl implements KitchenService {
      * */
     @Override
     public void createOrderToDish(KitchenOrderDto order) {
+        log.debug("trying to create orderToDish {}", order);
 
         for (DishDto dishDto : order.getOrderDishes()) {
 
@@ -160,6 +198,7 @@ public class KitchenServiceImpl implements KitchenService {
                     .build();
 
             kitchenOrderToDishRepository.save(orderToDish);
+            log.debug("successfully created orderToDish with id: {}", orderToDish.getId());
         }
     }
 
