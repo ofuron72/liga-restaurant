@@ -9,9 +9,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
 import java.io.Serializable;
 
+/**
+ * Составной идентификатор для связи между заказом и блюдом.
+ * Используется в качестве первичного ключа в базе данных для таблицы,
+ * которая связывает заказы и блюда.
+ */
 @Getter
 @Setter
 @ToString

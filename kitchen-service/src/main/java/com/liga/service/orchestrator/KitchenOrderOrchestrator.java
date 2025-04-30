@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Сервис, который управляет оркестрацией обработки заказа на кухне.
+ */
 @Slf4j
 @Transactional
 @Service
@@ -22,6 +25,9 @@ public class KitchenOrderOrchestrator {
     private final KitchenService kitchenService;
     private final KitchenOrderDtoToWaiterOrderSendDtoMapper kitchenOrderDtoToWaiterOrderSendDtoMapper;
 
+    /**
+     * Устанавливает статус заказа как {@code READY} и отправляет обновленную информацию о заказе в сервис официантов.
+     */
     public void setCookedAndSendOrder(Long orderId){
 
         KitchenOrderDto kitchenOrderDto = kitchenService.getOrderById(orderId);
@@ -33,9 +39,10 @@ public class KitchenOrderOrchestrator {
 
         try {
             waiterFeignClient.sendCookedOrderToWaiter(orderForWaiterService);
-            log.info("Sent order with id: {} to waiter", orderForWaiterService.orderIdWaiterService());
+            log.debug("Sent order with id: {} to waiter", orderForWaiterService.orderIdWaiterService());
         } catch (FeignException ex) {
             throw new SendOrderFeignException("Error sending cooked order to waiter");
+
         }
     }
 

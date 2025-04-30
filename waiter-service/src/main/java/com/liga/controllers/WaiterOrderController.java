@@ -1,6 +1,11 @@
 package com.liga.controllers;
 
-import com.liga.dto.*;
+
+import com.liga.dto.WaiterMenuItemResponse;
+import com.liga.dto.WaiterOrderCreateRequestDto;
+import com.liga.entities.WaiterOrderEntity;
+import com.liga.dto.WaiterOrderResponse;
+import com.liga.dto.WaiterOrderStatusResponse;
 import com.liga.service.WaiterService;
 import com.liga.service.orchestrator.WaiterOrderOrchestrator;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -17,9 +22,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.Set;
 
 @RestController
@@ -145,28 +153,28 @@ public class WaiterOrderController {
         return new ResponseEntity<>(waiterOrderResponse, HttpStatus.OK);
     }
 
-
+    @Hidden
     /**
      * endpoint для feign,
      *
-     * @param waiterOrderDto dto с данными о готовом заказе
+     * @param waiterOrderEntity dto с данными о готовом заказе
      */
     @Hidden
     @PostMapping("/cooked")
-    public ResponseEntity<Void> receiveCookedOrderFromKitchen(@RequestBody WaiterOrderDto waiterOrderDto) {
-        waiterService.serveOrder(waiterOrderDto);
+    public ResponseEntity<Void> receiveCookedOrderFromKitchen(@RequestBody WaiterOrderEntity waiterOrderEntity) {
+        waiterService.serveOrder(waiterOrderEntity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
      * endpoint для feign,
      *
-     * @param waiterOrderDto dto с данными об отмененном заказе
+     * @param waiterOrderEntity dto с данными об отмененном заказе
      */
     @Hidden
     @PostMapping("/rejected")
-    public ResponseEntity<Void> receiveRejectedOrderFromKitchen(@RequestBody WaiterOrderDto waiterOrderDto) {
-        waiterService.cancelOrder(waiterOrderDto);
+    public ResponseEntity<Void> receiveRejectedOrderFromKitchen(@RequestBody WaiterOrderEntity waiterOrderEntity) {
+        waiterService.cancelOrder(waiterOrderEntity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

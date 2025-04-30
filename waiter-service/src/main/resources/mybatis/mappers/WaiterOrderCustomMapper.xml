@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.liga.repository.WaiterOrderMapper">
 
-    <resultMap id="WaiterOrderDto" type="com.liga.dto.WaiterOrderDto" autoMapping="true">
+    <resultMap id="WaiterOrderDto" type="com.liga.entities.WaiterOrderEntity" autoMapping="true">
         <result column="order_no" property="id"/>
         <result column="status" property="status"/>
         <result column="create_dttm" property="createDttm"/>
@@ -16,7 +16,7 @@
         WHERE order_no = #{id,jdbcType=BIGINT}
     </select>
 
-    <resultMap id="listWaiterOrderDto" type="com.liga.dto.WaiterOrderDto" autoMapping="true">
+    <resultMap id="listWaiterOrderDto" type="com.liga.entities.WaiterOrderEntity" autoMapping="true">
         <result column="order_no" property="id"/>
         <result column="status" property="status"/>
         <result column="create_dttm" property="createDttm"/>
@@ -25,15 +25,15 @@
     </resultMap>
 
     <select id="getAll" resultMap="listWaiterOrderDto">
-        select order_no, status, create_dttm, waiter_id, table_no
+        SELECT order_no, status, create_dttm, waiter_id, table_no
         FROM waiter_order
     </select>
 
     <insert id="create"
-            parameterType="com.liga.dto.WaiterOrderDto"
+            parameterType="com.liga.entities.WaiterOrderEntity"
             useGeneratedKeys="true"
             keyProperty="id">
-        insert into waiter_order (order_no, status, create_dttm, waiter_id, table_no)
+        INSERT INTO waiter_order (order_no, status, create_dttm, waiter_id, table_no)
         VALUES (nextval('waiter_order_sequence'), #{status}, #{createDttm,jdbcType=TIMESTAMP_WITH_TIMEZONE},
                 #{waiterId}, #{tableNo})
     </insert>
@@ -43,13 +43,13 @@
     </resultMap>
 
     <select id="getOrderStatus" resultMap="OrderStatusDto">
-        select status
-        from waiter_order
-        where order_no = #{id}
+        SELECT status
+        FROM waiter_order
+        WHERE order_no = #{id}
     </select>
 
     <update id="updateStatusOrder"
-            parameterType="com.liga.dto.WaiterOrderDto">
+            parameterType="com.liga.entities.WaiterOrderEntity">
         UPDATE waiter_order
         SET
         status = #{order.status}

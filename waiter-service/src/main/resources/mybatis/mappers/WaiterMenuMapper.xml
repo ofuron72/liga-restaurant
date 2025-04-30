@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liga.repository.WaiterMenuMapper">
+
+    <resultMap id="listWaiterMenuItemDto" type="com.liga.entities.WaiterMenuItemEntity" autoMapping="true">
+        <result column="id" property="id"/>
+        <result column="dish_name" property="dish_name"/>
+        <result column="dish_cost" property="dish_cost"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="listWaiterMenuItemDto">
+        SELECT id, dish_name, dish_cost
+        FROM menu
+    </select>
+
+
+</mapper>

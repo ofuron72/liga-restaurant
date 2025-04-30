@@ -14,6 +14,9 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Сущность, представляющая заказ на кухне.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,7 +25,7 @@ import java.util.Set;
 @Entity
 @Builder
 @Table(name = "kitchen_order")
-public class KitchenOrder {
+public class KitchenOrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "kitchen_order_seq")
     @SequenceGenerator(name = "kitchen_order_seq", sequenceName = "kitchen_order_sequence", allocationSize = 1)
@@ -41,7 +44,7 @@ public class KitchenOrder {
     private ZonedDateTime createDttm;
 
     @OneToMany(mappedBy = "order")
-    private Set<OrderToDish> orderDishes = new HashSet<>();
+    private Set<OrderToDishEntity> orderDishes = new HashSet<>();
 
     @Column(name="order_id_in_waiter_service")
     private Long orderIdWaiterService;

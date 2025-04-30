@@ -2,13 +2,17 @@ package com.liga.service;
 
 import com.liga.converter.WaiterOrderDtoToResponseMapper;
 import com.liga.converter.WaiterOrderStatusDtoToResponseMapper;
-import com.liga.dto.WaiterOrderDto;
+import com.liga.entities.WaiterMenuItemEntity;
+import com.liga.dto.WaiterMenuItemResponse;
+import com.liga.entities.WaiterOrderEntity;
 import com.liga.dto.WaiterOrderResponse;
 import com.liga.dto.WaiterOrderStatusDto;
 import com.liga.dto.WaiterOrderStatusResponse;
 import com.liga.exceptions.OrderNotFoundException;
 import com.liga.exceptions.StatusNotFoundException;
 import com.liga.objects.OrderStatus;
+import com.liga.repository.WaiterAccountMapper;
+import com.liga.repository.WaiterMenuMapper;
 import com.liga.repository.WaiterOrderMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,13 +42,13 @@ class WaiterServiceImplTest {
     @InjectMocks
     private WaiterServiceImpl waiterService;
 
-    private WaiterOrderDto order;
+    private WaiterOrderEntity order;
     private WaiterOrderResponse waiterOrderResponse;
     private WaiterOrderStatusResponse waiterOrderStatusResponse;
 
     @BeforeEach
     void setUp() {
-        order = WaiterOrderDto.builder()
+        order = WaiterOrderEntity.builder()
                 .id(1L)
                 .status(OrderStatus.ACCEPTED)
                 .createDttm(OffsetDateTime.now())
@@ -125,7 +129,7 @@ class WaiterServiceImplTest {
         //given
 
         OffsetDateTime fixedTime = OffsetDateTime.now();
-        WaiterOrderDto order1 = WaiterOrderDto.builder()
+        WaiterOrderEntity order1 = WaiterOrderEntity.builder()
                 .id(1L)
                 .status(OrderStatus.ACCEPTED)
                 .createDttm(fixedTime)
@@ -133,7 +137,7 @@ class WaiterServiceImplTest {
                 .tableNo("A1")
                 .build();
 
-        WaiterOrderDto order2 = WaiterOrderDto.builder()
+        WaiterOrderEntity order2 = WaiterOrderEntity.builder()
                 .id(2L)
                 .status(OrderStatus.ACCEPTED)
                 .createDttm(fixedTime)
@@ -210,16 +214,18 @@ class WaiterServiceImplTest {
     void testCreateOrder() {
         //given
         OffsetDateTime fixedTime = OffsetDateTime.now();
-        WaiterOrderDto createdOrder = WaiterOrderDto.builder()
+        WaiterOrderEntity createdOrder = WaiterOrderEntity.builder()
                 .id(1L)
                 .waiterId(1L)
                 .tableNo("A1")
                 .createDttm(fixedTime)
                 .status(OrderStatus.ACCEPTED)
                 .build();
+        when(waiterAccountMapper.existsById(createdOrder.getWaiterId())).thenReturn(true);
 
         //when
         var response = waiterService.createOrder(order);
+
 
         //then
         assertEquals(response.getWaiterId(), createdOrder.getWaiterId());
@@ -284,7 +290,7 @@ class WaiterServiceImplTest {
     @Test
     void testServeOrder() {
         //given
-        WaiterOrderDto createdOrder = WaiterOrderDto.builder()
+        WaiterOrderEntity createdOrder = WaiterOrderEntity.builder()
                 .id(1L)
                 .waiterId(1L)
                 .tableNo("A1")
@@ -307,7 +313,7 @@ class WaiterServiceImplTest {
     @Test
     void testCancelOrder() {
         //given
-        WaiterOrderDto createdOrder = WaiterOrderDto.builder()
+        WaiterOrderEntity createdOrder = WaiterOrderEntity.builder()
                 .id(1L)
                 .waiterId(1L)
                 .tableNo("A1")
@@ -319,4 +325,82 @@ class WaiterServiceImplTest {
         //then
         assertEquals(OrderStatus.REJECTED_BY_THE_KITCHEN, createdOrder.getStatus());
     }
+
+    /**
+     * Проверяет, что метод getAllMenuItems возвращает корректный набор заказов.
+     * <p>
+     * given: два пункта меню, возвращаемых маппером waiterOrderMapper.
+     * when: вызывается метод getAllMenuItems у waiterService.
+     * then: возвращаемое множество соответствует ожидаемым данным.
+     */
+    @Test
+    void testGetAllMenuItems_shouldReturnSetOfMenuItems() {
+        //given
+
+        WaiterMenuItemEntity createdMenuItem1 = WaiterMenuItemEntity.builder()
+                .id(1L)
+                .dish_name("Pizza")
+                .dish_cost(12.0)
+                .build();
+
+        WaiterMenuItemEntity createdMenuItem2 = WaiterMenuItemEntity.builder()
+                .id(2L)
+                .dish_name("Salad")
+                .dish_cost(7.99)
+                .build();
+
+        WaiterMenuItemResponse waiterMenuItemResponse1 = new WaiterMenuItemResponse(
+                "Pizza",
+                12.0
+        );
+
+        WaiterMenuItemResponse waiterMenuItemResponse2 = new WaiterMenuItemResponse(
+                "Salad",
+                7.99
+        );
+
+        when(waiterMenuMapper.getAll())
+                .thenReturn(Set.of(createdMenuItem1, createdMenuItem2));
+
+
+        when(waiterMenuDtoToResponseMapper.map(createdMenuItem1))
+                .thenReturn(waiterMenuItemResponse1);
+
+        when(waiterMenuDtoToResponseMapper.map(createdMenuItem2))
+                .thenReturn(waiterMenuItemResponse2);
+
+        //then
+        Set<WaiterMenuItemResponse> responses = waiterService.getAllMenuItem();
+
+        //then
+        assertNotNull(responses);
+        assertEquals(Set.of(waiterMenuItemResponse1, waiterMenuItemResponse2),
+                responses);
+        assertEquals(2, responses.size());
+    }
+
+
+    /**
+     * Проверяет, что метод getAllMenuItems возвращает пустое множество, если заказов нет.
+     * <p>
+     * given: пустое множество заказов, возвращаемое маппером waiterMenuMapper.getAll().
+     * when: вызывается метод getAllMenuItems у waiterService.
+     * then: возвращаемое множество пустое.
+     */
+    @Test
+    void testGetAllMenuItems_shouldReturnEmptySet() {
+
+        //given
+        when(waiterMenuMapper.getAll())
+                .thenReturn(Set.of());
+
+        //when
+        Set<WaiterMenuItemResponse> responses = waiterService.getAllMenuItem();
+
+        //then
+        assertNotNull(responses);
+        assertTrue(responses.isEmpty());
+    }
+
+
 }

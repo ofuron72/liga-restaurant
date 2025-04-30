@@ -1,5 +1,6 @@
 package com.liga.dto;
 
+import com.liga.dto.DishSendDto;
 import com.liga.objects.OrderStatus;
 import lombok.Setter;
 import lombok.Getter;
@@ -7,12 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
-import lombok.Builder;
-
 import java.time.OffsetDateTime;
-
 import java.util.Set;
 
+/**
+ * DTO, представляющий заказ, в сервисе официанта.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,7 +21,7 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class WaiterOrderDto {
+public class WaiterOrderEntity {
     private Long id;
 
     private OrderStatus status;

@@ -1,16 +1,19 @@
 package com.liga.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;
-import lombok.Builder;
 
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Сущность, представляющее блюдо.
+ */
 @Entity
 @Table(name = "dish")
 @NoArgsConstructor
@@ -19,7 +22,7 @@ import java.util.Set;
 @Setter
 @Builder
 @EqualsAndHashCode
-public class Dish {
+public class DishEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dish_id")
@@ -34,6 +37,6 @@ public class Dish {
     @Column(name = "dish_composition")
     private String dishComposition;
 
-    @OneToMany(mappedBy = "dish")
-    private Set<OrderToDish> orderDishes = new HashSet<>();
+    @OneToMany(mappedBy = "dishEntity")
+    private Set<OrderToDishEntity> orderDishes = new HashSet<>();
 }

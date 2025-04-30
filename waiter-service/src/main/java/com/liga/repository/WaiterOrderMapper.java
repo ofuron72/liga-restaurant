@@ -1,6 +1,6 @@
 package com.liga.repository;
 
-import com.liga.dto.WaiterOrderDto;
+import com.liga.entities.WaiterOrderEntity;
 import com.liga.dto.WaiterOrderStatusDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -8,17 +8,20 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 
+/**
+ * Интерфейс для работы с заказами через MyBatis.
+ */
 @Mapper
 @Repository
 public interface WaiterOrderMapper {
-    WaiterOrderDto getById(@Param("id") Long id);
+    WaiterOrderEntity getById(@Param("id") Long id);
 
-    Set<WaiterOrderDto> getAll();
+    Set<WaiterOrderEntity> getAll();
 
-    void create(WaiterOrderDto order);
+    void create(WaiterOrderEntity order);
 
     WaiterOrderStatusDto getOrderStatus(@Param("id") Long id);
 
-    void updateStatusOrder(@Param("order") WaiterOrderDto order);
+    void updateStatusOrder(@Param("order") WaiterOrderEntity order);
 
 }

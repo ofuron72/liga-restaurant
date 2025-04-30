@@ -24,7 +24,6 @@ public interface KitchenService {
 
     void createOrderToDish(KitchenOrderDto order);
 
-    DishDto getDishById(Long orderId);
 
 
 }

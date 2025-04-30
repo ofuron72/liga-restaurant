@@ -1,8 +1,8 @@
 package com.liga.service;
 
-import com.liga.dto.WaiterOrderDto;
+import com.liga.dto.WaiterMenuItemResponse;
+import com.liga.entities.WaiterOrderEntity;
 import com.liga.dto.WaiterOrderResponse;
-import com.liga.dto.WaiterOrderStatusDto;
 import com.liga.dto.WaiterOrderStatusResponse;
 
 import java.util.Set;
@@ -12,11 +12,13 @@ public interface WaiterService {
 
     Set<WaiterOrderResponse> getAllOrders();
 
-    WaiterOrderDto createOrder(WaiterOrderDto order);
+    WaiterOrderEntity createOrder(WaiterOrderEntity order);
 
     WaiterOrderStatusResponse getOrderStatus(Long id);
 
-    void serveOrder(WaiterOrderDto order);
+    void serveOrder(WaiterOrderEntity order);
 
-    void cancelOrder(WaiterOrderDto order);
+    void cancelOrder(WaiterOrderEntity order);
+
+    Set<WaiterMenuItemResponse> getAllMenuItem();
 }

@@ -8,9 +8,6 @@ import com.liga.dto.DishDto;
 import com.liga.dto.KitchenOrderDto;
 import com.liga.dto.KitchenOrderResponse;
 import com.liga.dto.WaiterOrderSendDto;
-import com.liga.entities.Dish;
-import com.liga.entities.KitchenOrder;
-import com.liga.entities.OrderToDish;
 import com.liga.exceptions.DishNotFoundException;
 import com.liga.exceptions.OrderNotFoundException;
 import com.liga.feign.WaiterFeignClient;
@@ -23,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
