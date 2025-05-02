@@ -9,7 +9,7 @@
 ## Склонировать репозиторий
 
 - git clone https://gitlab.com/megagrebec1999/internship.git
-
+- git clone https://github.com/ofuron72/liga-restaurant.git
 ## Взаимодействие микросервисов
 
 - Cервис water-service отправляет заказы на кухню через Kafka.
