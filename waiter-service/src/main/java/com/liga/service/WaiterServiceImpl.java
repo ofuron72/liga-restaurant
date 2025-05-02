@@ -82,8 +82,9 @@ public class WaiterServiceImpl implements WaiterService {
         order.setStatus(OrderStatus.ACCEPTED);
         order.setCreateDttm(OffsetDateTime.now());
         waiterOrderMapper.create(order);
+        var result = waiterOrderDtoMapper.toWaiterOrderDto(order);
         log.debug("Order created: {}", order);
-        return waiterOrderDtoMapper.toWaiterOrderDto(order);
+        return result;
     }
 
     @Override

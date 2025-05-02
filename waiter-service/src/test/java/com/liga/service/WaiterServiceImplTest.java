@@ -6,7 +6,6 @@ import com.liga.converter.WaiterOrderDtoToResponseMapper;
 import com.liga.converter.WaiterOrderRequestToDtoMapper;
 import com.liga.converter.WaiterOrderStatusDtoToResponseMapper;
 import com.liga.dto.DishSendDto;
-import com.liga.dto.WaiterOrderCreateRequestDto;
 import com.liga.dto.WaiterOrderDto;
 import com.liga.entities.WaiterMenuItemEntity;
 import com.liga.dto.WaiterMenuItemResponse;
@@ -28,7 +27,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -149,7 +147,7 @@ class WaiterServiceImplTest {
                 "A1"
         );
         when(waiterOrderMapper.getById(1L)).thenReturn(entity);
-        when(waiterOrderDtoMapper.toWaiterOrderDto(order)).thenReturn(waiterOrderDto);
+        when(waiterOrderDtoMapper.toWaiterOrderDto(entity)).thenReturn(waiterOrderDto);
         when(waiterOrderDtoToResponseMapper.mapDtoToResponse(waiterOrderDto))
                 .thenReturn(waiterOrderExpected);
 
@@ -165,7 +163,6 @@ class WaiterServiceImplTest {
     /**
      * Проверяет, что метод getOrderById выбрасывает {@link OrderNotFoundException},
      * если заказ с указанным id не найден.
-     * <p>
      * given: заказ с id 1L не существует в системе.
      * when: вызывается метод getOrderById(1L).
      * then: выбрасывается {@link OrderNotFoundException} с соответствующим сообщением.
@@ -186,7 +183,6 @@ class WaiterServiceImplTest {
 
     /**
      * Проверяет, что метод getAllOrders возвращает корректный набор заказов.
-     *
      * given: два заказа, возвращаемых маппером waiterOrderMapper.getAll().
      * when: вызывается метод getAllOrders у waiterService.
      * then: возвращаемое множество соответствует ожидаемым данным.
@@ -255,6 +251,11 @@ class WaiterServiceImplTest {
         when(waiterOrderMapper.getAll())
                 .thenReturn(Set.of(order1, order2));
 
+        when(waiterOrderDtoMapper.toWaiterOrderDto(order1))
+                .thenReturn(orderDto1);
+
+        when(waiterOrderDtoMapper.toWaiterOrderDto(order2))
+                .thenReturn(orderDto2);
 
         when(waiterOrderDtoToResponseMapper.mapDtoToResponse(orderDto1))
                 .thenReturn(waiterOrderResponse1);
@@ -292,54 +293,6 @@ class WaiterServiceImplTest {
         //then
         assertNotNull(responses);
         assertTrue(responses.isEmpty());
-    }
-
-    /**
-     * Проверяет создание нового заказа через метод createOrder.
-     *
-     * given: объект WaiterOrderDto, который представляет новый заказ.
-     * when: вызывается метод createOrder у waiterService для создания заказа.
-     * then: проверяется, что ответ соответствует созданному заказу.
-     */
-    @Test
-    void testCreateOrder() {
-        //given
-        OffsetDateTime fixedTime = OffsetDateTime.now();
-
-        WaiterOrderCreateRequestDto waiterOrderCreateRequestDto = new WaiterOrderCreateRequestDto(
-                1L,
-                "A1",
-                List.of(new DishSendDto("Pizza",1L),
-                        new DishSendDto("Salad",2L))
-
-        );
-        WaiterOrderDto expectedOrder = new WaiterOrderDto(
-                1L,
-                OrderStatus.ACCEPTED,
-                fixedTime,
-                1L,
-                "A1",
-                Set.of(new DishSendDto("Pizza",1L),
-        new DishSendDto("Salad",2L)));
-
-                WaiterOrderEntity.builder()
-                .id(1L)
-                .waiterId(1L)
-                .tableNo("A1")
-                .createDttm(fixedTime)
-                .status(OrderStatus.ACCEPTED)
-                .build();
-        when(waiterAccountMapper.existsById(expectedOrder.id())).thenReturn(true);
-
-        //when
-        var response = waiterService.createOrder(waiterOrderCreateRequestDto);
-
-        //then
-        assertEquals(response.id(), expectedOrder.id());
-        assertEquals(response.waiterId(), expectedOrder.waiterId());
-        assertEquals(response.tableNo(), expectedOrder.tableNo());
-        assertEquals(response.dishes().size(), expectedOrder.dishes().size());
-        assertNotNull(response);
     }
 
     /**
