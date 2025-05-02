@@ -3,9 +3,12 @@ package com.liga.converter;
 import com.liga.dto.DishSendDto;
 import com.liga.dto.WaiterOrderCreateRequestDto;
 import com.liga.dto.WaiterOrderDto;
+import com.liga.entities.WaiterOrderEntity;
+import com.liga.objects.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -23,31 +26,33 @@ class WaiterOrderDtoMapperTest {
     @Test
     void testToWaiterOrderDto() {
         //given
+        OffsetDateTime now = OffsetDateTime.now();
         DishSendDto dish1 = new DishSendDto("pizza", 2L);
         DishSendDto dish2 = new DishSendDto("pasta", 1L);
 
-        WaiterOrderCreateRequestDto waiterOrderCreateRequestDto = new WaiterOrderCreateRequestDto(
+        WaiterOrderDto dto = new WaiterOrderDto(
+                123L,
+                OrderStatus.ACCEPTED,
+                now,
                 123L,
                 "A1",
-                List.of(dish1, dish2) // dishes
+                Set.of(dish1, dish2)
         );
 
-
-        DishSendDto expectedDish1 = new DishSendDto("pizza", 2L);
-        DishSendDto expectedDish2 = new DishSendDto("pasta", 1L);
-
-        WaiterOrderDto expectedDto = WaiterOrderDto.builder()
-                .waiterId(123L)
-                .tableNo("A1")
-                .dishes(Set.of(expectedDish1, expectedDish2))
-                .build();
+        WaiterOrderEntity expectedEntity = new WaiterOrderEntity(
+                123L,
+                OrderStatus.ACCEPTED,
+                now,
+                123L,
+                "A1",
+                Set.of(dish1, dish2)
+        );
 
         //when
-        WaiterOrderDto waiterOrderDto = waiterOrderDtoMapper.toWaiterOrderDto(waiterOrderCreateRequestDto);
-
+        WaiterOrderEntity result = waiterOrderDtoMapper.toWaiterOrderEntity(dto);
 
         //then
-        assertEquals(expectedDto, waiterOrderDto);
+        assertEquals(result, expectedEntity);
     }
 
 }

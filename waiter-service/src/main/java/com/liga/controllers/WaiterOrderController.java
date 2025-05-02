@@ -1,9 +1,9 @@
 package com.liga.controllers;
 
 
-import com.liga.dto.WaiterMenuItemResponse;
 import com.liga.dto.WaiterOrderCreateRequestDto;
-import com.liga.entities.WaiterOrderEntity;
+
+import com.liga.dto.WaiterOrderDto;
 import com.liga.dto.WaiterOrderResponse;
 import com.liga.dto.WaiterOrderStatusResponse;
 import com.liga.service.WaiterService;
@@ -75,7 +75,7 @@ public class WaiterOrderController {
                     description = "List of orders returned successfully",
                     content = @Content(
                             mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = WaiterOrderDto.class))
+                            array = @ArraySchema(schema = @Schema(implementation = WaiterOrderResponse.class))
                     )
             )
     })
@@ -153,28 +153,23 @@ public class WaiterOrderController {
         return new ResponseEntity<>(waiterOrderResponse, HttpStatus.OK);
     }
 
-    @Hidden
-    /**
-     * endpoint для feign,
-     *
-     * @param waiterOrderEntity dto с данными о готовом заказе
-     */
+
     @Hidden
     @PostMapping("/cooked")
-    public ResponseEntity<Void> receiveCookedOrderFromKitchen(@RequestBody WaiterOrderEntity waiterOrderEntity) {
-        waiterService.serveOrder(waiterOrderEntity);
+    public ResponseEntity<Void> receiveCookedOrderFromKitchen(@RequestBody WaiterOrderDto waiterOrderDto) {
+        waiterService.serveOrder(waiterOrderDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
      * endpoint для feign,
      *
-     * @param waiterOrderEntity dto с данными об отмененном заказе
+     * @param waiterOrderDto dto с данными об отмененном заказе
      */
     @Hidden
     @PostMapping("/rejected")
-    public ResponseEntity<Void> receiveRejectedOrderFromKitchen(@RequestBody WaiterOrderEntity waiterOrderEntity) {
-        waiterService.cancelOrder(waiterOrderEntity);
+    public ResponseEntity<Void> receiveRejectedOrderFromKitchen(@RequestBody WaiterOrderDto waiterOrderDto) {
+        waiterService.cancelOrder(waiterOrderDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

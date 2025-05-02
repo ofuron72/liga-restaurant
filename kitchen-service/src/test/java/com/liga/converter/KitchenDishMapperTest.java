@@ -1,17 +1,19 @@
 package com.liga.converter;
 
 import com.liga.dto.DishDto;
-import com.liga.entities.Dish;
+
+import com.liga.entities.DishEntity;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class KitchenDishMapperTest {
-    private final KitchenDishMapper kitchenDishMapper = new KitchenDishMapperImpl();
+    private final KitchenDishMapper kitchenDishMapper = Mappers.getMapper(KitchenDishMapper.class);
 
     /**
      * Проверяет корректность маппинга сущности
-     * {@link Dish} в DTO {@link DishDto}.
+     * {@link DishEntity} в DTO {@link DishDto}.
      * given: Сущность блюда с заполненными полями.
      * when: Вызывается метод маппера `toDto`.
      * then: Поля DTO должны совпадать с полями исходной сущности.
@@ -19,7 +21,7 @@ class KitchenDishMapperTest {
     @Test
     void testToDto_shouldMapCorrectly() {
         //given
-        Dish dish = Dish.builder()
+        DishEntity dish = DishEntity.builder()
                 .id(1L)
                 .balance(10L)
                 .shortName("pizza")
@@ -41,7 +43,7 @@ class KitchenDishMapperTest {
     }
 
     /**
-     * Проверяет корректность маппинга DTO {@link DishDto} в сущность {@link Dish}.
+     * Проверяет корректность маппинга DTO {@link DishDto} в сущность {@link DishEntity}.
      * <p>
      * given: DTO блюда с заданными значениями полей.
      * when: Вызывается метод маппера `toEntity`.
@@ -56,7 +58,7 @@ class KitchenDishMapperTest {
                 "tomato",
                 1L);
 
-        Dish expectedDish = Dish.builder()
+        DishEntity expectedDish = DishEntity.builder()
                 .id(1L)
                 .balance(10L)
                 .shortName("pizza")
@@ -64,7 +66,7 @@ class KitchenDishMapperTest {
                 .build();
 
         //when
-        Dish dish = kitchenDishMapper.toEntity(dishDto);
+        DishEntity dish = kitchenDishMapper.toEntity(dishDto);
 
         //then
         assertEquals(dish, expectedDish);

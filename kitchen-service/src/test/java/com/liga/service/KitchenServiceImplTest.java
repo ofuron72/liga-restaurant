@@ -8,7 +8,9 @@ import com.liga.dto.DishDto;
 import com.liga.dto.KitchenOrderDto;
 import com.liga.dto.KitchenOrderResponse;
 import com.liga.dto.WaiterOrderSendDto;
-import com.liga.exceptions.DishNotFoundException;
+import com.liga.entities.DishEntity;
+import com.liga.entities.KitchenOrderEntity;
+import com.liga.entities.OrderToDishEntity;
 import com.liga.exceptions.OrderNotFoundException;
 import com.liga.feign.WaiterFeignClient;
 import com.liga.objects.KitchenStatus;
@@ -20,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
@@ -29,7 +32,11 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class KitchenServiceImplTest {
@@ -58,15 +65,15 @@ class KitchenServiceImplTest {
     @InjectMocks
     private KitchenServiceImpl kitchenService;
 
-    private KitchenOrder kitchenOrder;
+    private KitchenOrderEntity kitchenOrder;
     private KitchenOrderDto kitchenOrderDto;
     private DishDto dishDto;
-    private Dish dish;
+    private DishEntity dish;
 
     @BeforeEach
     void setUp() {
-        OrderToDish orderToDish = new OrderToDish();
-        kitchenOrder = KitchenOrder.builder()
+        OrderToDishEntity orderToDish = new OrderToDishEntity();
+        kitchenOrder = KitchenOrderEntity.builder()
                 .id(1L)
                 .orderIdWaiterService(1L)
                 .waiterOrderNo(1L)
@@ -79,6 +86,7 @@ class KitchenServiceImplTest {
                 .waiterOrderNo(1L)
                 .build();
         kitchenOrderDto.setOrderIdWaiterService(1L);
+
         dishDto = new DishDto(1L,
                 10L,
                 "PIZZA",
@@ -86,12 +94,14 @@ class KitchenServiceImplTest {
                 1L
         );
         kitchenOrderDto.setOrderDishes(Set.of(dishDto));
-        dish = Dish.builder()
+        dish = DishEntity.builder()
                 .id(1L)
                 .balance(10L)
                 .dishComposition("tomato, cheese")
                 .shortName("PIZZA")
                 .build();
+
+
     }
 
     /**
@@ -103,14 +113,14 @@ class KitchenServiceImplTest {
     @Test
     void testGetAllOrders_shouldReturnSetOfOrders() {
         //given
-        KitchenOrder order1 = KitchenOrder.builder()
+        KitchenOrderEntity order1 = KitchenOrderEntity.builder()
                 .id(1L)
                 .status(KitchenStatus.ACCEPTED)
                 .waiterOrderNo(1L)
                 .orderIdWaiterService(1L)
                 .build();
 
-        KitchenOrder order2 = KitchenOrder.builder()
+        KitchenOrderEntity order2 = KitchenOrderEntity.builder()
                 .id(2L)
                 .status(KitchenStatus.ACCEPTED)
                 .waiterOrderNo(2L)
@@ -197,7 +207,7 @@ class KitchenServiceImplTest {
     @Test
     void testCreateOrder_shouldAcceptOrder_whenDishesAvailable() {
         //given
-        KitchenOrder order = KitchenOrder.builder()
+        KitchenOrderEntity order = KitchenOrderEntity.builder()
                 .id(1L)
                 .status(KitchenStatus.ACCEPTED)
                 .waiterOrderNo(1L)
@@ -238,7 +248,7 @@ class KitchenServiceImplTest {
     @Test
     void testCreateOrder_shouldRejectOrder_whenDishesIsNotAvailable() {
         //given
-        KitchenOrder order = KitchenOrder.builder()
+        KitchenOrderEntity order = KitchenOrderEntity.builder()
                 .id(1L)
                 .status(KitchenStatus.ACCEPTED)
                 .waiterOrderNo(1L)
@@ -462,95 +472,6 @@ class KitchenServiceImplTest {
     }
 
 
-    /**
-     * Проверяет поведение сервиса при запросе блюда по короткому названию, когда блюдо существует.
-     * given: В репозитории существует блюдо с указанным коротким названием.
-     * when: Вызывается метод getDishByShortName с коротким названием блюда.
-     * then: Ожидается, что будет возвращен объект типа DishDto, соответствующий найденному блюду.
-     */
-    @Test
-    void testGetDishByShortName_shouldReturnDto_whenDishExists() {
-        //given
-        String shortName = "PIZZA";
-
-        when(kitchenDishRepository.findByShortName(shortName)).thenReturn(Optional.of(dish));
-        when(kitchenDishMapper.toDto(dish)).thenReturn(dishDto);
-
-        //when
-        DishDto resultDto = kitchenService.getDishByShortName(shortName);
-
-        //then
-        assertNotNull(resultDto);
-        assertEquals(dishDto, resultDto);
-    }
-
-    /**
-     * Проверяет поведение сервиса при запросе блюда по короткому названию, когда блюдо не существует.
-     * given: В репозитории отсутствует блюдо с указанным коротким названием.
-     * when: Вызывается метод getDishByShortName с коротким названием блюда.
-     * then: Ожидается, что будет выброшено исключение DishNotFoundException с соответствующим сообщением.
-     */
-    @Test
-    void testGetDishByShortName_shouldThrowException_whenDishNotExists() {
-        //given
-        String shortName = "sushi";
-
-        when(kitchenDishRepository.findByShortName(shortName))
-                .thenReturn(Optional.empty());
-
-        //when
-        DishNotFoundException exception = assertThrows(DishNotFoundException.class, () -> {
-            kitchenService.getDishByShortName(shortName);
-        });
-
-        //then
-        assertEquals(String.format("Dish with shortName %s not found", shortName), exception.getMessage());
-    }
-
-    /**
-     * Проверяет поведение сервиса при запросе блюда по ID, когда блюдо существует.
-     * given: В репозитории существует блюдо с указанным ID.
-     * when: Вызывается метод getDishById с указанным ID блюда.
-     * then: Ожидается, что вернется объект DishDto, соответствующий найденному блюду.
-     */
-    @Test
-    void testGetDishById_shouldReturnDto_whenDishExists() {
-        //given
-        Long dishId = 1L;
-
-        when(kitchenDishRepository.findById(dishId)).thenReturn(Optional.of(dish));
-        when(kitchenDishMapper.toDto(dish)).thenReturn(dishDto);
-
-        //when
-        DishDto resultDto = kitchenService.getDishById(dishId);
-
-        //then
-        assertNotNull(resultDto);
-        assertEquals(dishDto, resultDto);
-    }
-
-    /**
-     * Проверяет поведение сервиса при запросе блюда по ID, когда блюдо не существует.
-     * given: В репозитории отсутствует блюдо с указанным ID.
-     * when: Вызывается метод getDishById с указанным ID блюда.
-     * then: Ожидается, что будет выброшено исключение DishNotFoundException с соответствующим сообщением.
-     */
-    @Test
-    void testGetDishById_shouldThrowException_whenDishNotExists() {
-        //given
-        Long dishId = 1L;
-
-        when(kitchenDishRepository.findById(dishId))
-                .thenReturn(Optional.empty());
-
-        //when
-        DishNotFoundException exception = assertThrows(DishNotFoundException.class, () -> {
-            kitchenService.getDishById(dishId);
-        });
-
-        //then
-        assertEquals(String.format("Dish with id %s not found", dishId), exception.getMessage());
-    }
 
     /**
      * Проверяет, что метод dishesIsAvailable возвращает true, если все блюда доступны.
@@ -565,7 +486,7 @@ class KitchenServiceImplTest {
         KitchenOrderDto orderDto = new KitchenOrderDto();
         orderDto.setOrderDishes(Set.of(dto));
 
-        Dish availableDish = new Dish();
+        DishEntity availableDish = new DishEntity();
         availableDish.setShortName("PIZZA");
 
         when(kitchenDishRepository.findAllDistinct()).thenReturn(List.of(availableDish));
@@ -592,7 +513,7 @@ class KitchenServiceImplTest {
         KitchenOrderDto orderDto = new KitchenOrderDto();
         orderDto.setOrderDishes(Set.of(orderedDish));
 
-        Dish availableDish = new Dish();
+        DishEntity availableDish = new DishEntity();
         availableDish.setShortName("pizza");
 
         when(kitchenDishRepository.findAllDistinct()).thenReturn(List.of(availableDish));

@@ -1,7 +1,13 @@
 package com.liga.service;
 
+import com.liga.converter.WaiterMenuDtoToResponseMapper;
+import com.liga.converter.WaiterOrderDtoMapper;
 import com.liga.converter.WaiterOrderDtoToResponseMapper;
+import com.liga.converter.WaiterOrderRequestToDtoMapper;
 import com.liga.converter.WaiterOrderStatusDtoToResponseMapper;
+import com.liga.dto.DishSendDto;
+import com.liga.dto.WaiterOrderCreateRequestDto;
+import com.liga.dto.WaiterOrderDto;
 import com.liga.entities.WaiterMenuItemEntity;
 import com.liga.dto.WaiterMenuItemResponse;
 import com.liga.entities.WaiterOrderEntity;
@@ -22,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,19 +46,40 @@ class WaiterServiceImplTest {
     @Mock
     private WaiterOrderStatusDtoToResponseMapper waiterOrderStatusDtoToResponseMapper;
 
+    @Mock
+    private WaiterOrderDtoMapper waiterOrderDtoMapper;
+
+    @Mock
+    private WaiterAccountMapper waiterAccountMapper;
+
+    @Mock
+    private WaiterMenuMapper waiterMenuMapper;
+
+    @Mock
+    private WaiterMenuDtoToResponseMapper waiterMenuDtoToResponseMapper;
+    @Mock
+    private WaiterOrderRequestToDtoMapper waiterOrderRequestToDtoMapper;
+
     @InjectMocks
     private WaiterServiceImpl waiterService;
 
     private WaiterOrderEntity order;
     private WaiterOrderResponse waiterOrderResponse;
+    private WaiterOrderDto waiterOrderDto;
+    private WaiterOrderEntity waiterOrderEntity;
     private WaiterOrderStatusResponse waiterOrderStatusResponse;
 
     @BeforeEach
     void setUp() {
+        OffsetDateTime now = OffsetDateTime.now();
+
+        DishSendDto dishSendDto1 = new DishSendDto("Pizza",2L);
+        DishSendDto dishSendDto2 = new DishSendDto("Salad",3L);
+
         order = WaiterOrderEntity.builder()
                 .id(1L)
                 .status(OrderStatus.ACCEPTED)
-                .createDttm(OffsetDateTime.now())
+                .createDttm(now)
                 .waiterId(1L)
                 .tableNo("A1")
                 .build();
@@ -59,9 +87,18 @@ class WaiterServiceImplTest {
         waiterOrderResponse = new WaiterOrderResponse(
                 1L,
                 OrderStatus.ACCEPTED,
-                OffsetDateTime.now(),
+                now,
                 1L,
                 "A1"
+        );
+
+        waiterOrderDto = new WaiterOrderDto(
+                1L,
+                OrderStatus.ACCEPTED,
+                now,
+                1L,
+                "A1",
+                Set.of(dishSendDto1, dishSendDto2)
         );
 
         waiterOrderStatusResponse = new WaiterOrderStatusResponse(
@@ -74,7 +111,6 @@ class WaiterServiceImplTest {
     /**
      * Проверяет, что метод getOrderById возвращает корректный объект {@link WaiterOrderResponse},
      * если заказ существует.
-     * <p>
      * given: заказ с id 1L существует в системе.
      * when: вызывается метод getOrderById(1L).
      * then: возвращается {@link WaiterOrderResponse} с нужными значениями.
@@ -82,16 +118,47 @@ class WaiterServiceImplTest {
     @Test
     void testGetOrderById_shouldReturnOrder_whenOrderIdIsValid() {
         //given
-        when(waiterOrderMapper.getById(1L)).thenReturn(order);
-        when(waiterOrderDtoToResponseMapper.mapDtoToResponse(order))
-                .thenReturn(waiterOrderResponse);
+        OffsetDateTime now = OffsetDateTime.now();
+
+        DishSendDto dishSendDto1 = new DishSendDto("Pizza",2L);
+        DishSendDto dishSendDto2 = new DishSendDto("Salad",3L);
+
+        WaiterOrderEntity entity = WaiterOrderEntity.builder()
+                .id(1L)
+                .status(OrderStatus.ACCEPTED)
+                .createDttm(now)
+                .waiterId(1L)
+                .tableNo("A1")
+                .dishes(Set.of(dishSendDto1, dishSendDto2))
+                .build();
+
+        waiterOrderDto = new WaiterOrderDto(
+                1L,
+                OrderStatus.ACCEPTED,
+                now,
+                1L,
+                "A1",
+                Set.of(dishSendDto1, dishSendDto2)
+        );
+
+        WaiterOrderResponse waiterOrderExpected = new WaiterOrderResponse(
+                1L,
+                OrderStatus.ACCEPTED,
+                now,
+                1L,
+                "A1"
+        );
+        when(waiterOrderMapper.getById(1L)).thenReturn(entity);
+        when(waiterOrderDtoMapper.toWaiterOrderDto(order)).thenReturn(waiterOrderDto);
+        when(waiterOrderDtoToResponseMapper.mapDtoToResponse(waiterOrderDto))
+                .thenReturn(waiterOrderExpected);
 
         //when
         WaiterOrderResponse response = waiterService.getOrderById(1L);
 
         //then
         assertNotNull(response);
-        assertEquals(1L, response.id());
+        assertEquals(response, waiterOrderExpected);
         assertEquals(OrderStatus.ACCEPTED, response.status());
     }
 
@@ -127,33 +194,49 @@ class WaiterServiceImplTest {
     @Test
     void testGetAllOrders_shouldReturnSetOfOrders() {
         //given
+        DishSendDto dishSendDto1 = new DishSendDto("Pizza",2L);
+        DishSendDto dishSendDto2 = new DishSendDto("Salad",3L);
 
         OffsetDateTime fixedTime = OffsetDateTime.now();
-        WaiterOrderEntity order1 = WaiterOrderEntity.builder()
-                .id(1L)
-                .status(OrderStatus.ACCEPTED)
-                .createDttm(fixedTime)
-                .waiterId(1L)
-                .tableNo("A1")
-                .build();
 
-        WaiterOrderEntity order2 = WaiterOrderEntity.builder()
+        WaiterOrderEntity order1 = WaiterOrderEntity.builder()
                 .id(2L)
                 .status(OrderStatus.ACCEPTED)
                 .createDttm(fixedTime)
                 .waiterId(1L)
                 .tableNo("A2")
+                .dishes(Set.of(dishSendDto1, dishSendDto2))
                 .build();
 
-        WaiterOrderResponse waiterOrderResponse1 = new WaiterOrderResponse(
-                1L,
-                OrderStatus.ACCEPTED,
-                fixedTime,
-                1L,
-                "A1"
+        WaiterOrderEntity order2 = WaiterOrderEntity.builder()
+                .id(3L)
+                .status(OrderStatus.ACCEPTED)
+                .createDttm(fixedTime)
+                .waiterId(2L)
+                .tableNo("A3")
+                .dishes(Set.of(dishSendDto1, dishSendDto2))
+                .build();
+
+
+
+        WaiterOrderDto orderDto1 = new WaiterOrderDto(2L,
+                        OrderStatus.ACCEPTED,
+                        fixedTime,
+                        1L,
+                        "A2",
+                Set.of(dishSendDto1, dishSendDto2)
         );
 
-        WaiterOrderResponse waiterOrderResponse2 = new WaiterOrderResponse(
+        WaiterOrderDto orderDto2 = new WaiterOrderDto(3L,
+                OrderStatus.ACCEPTED,
+                fixedTime,
+                2L,
+                "A3",
+                Set.of(dishSendDto1, dishSendDto2)
+        );
+
+
+        WaiterOrderResponse waiterOrderResponse1 = new WaiterOrderResponse(
                 2L,
                 OrderStatus.ACCEPTED,
                 fixedTime,
@@ -161,17 +244,25 @@ class WaiterServiceImplTest {
                 "A2"
         );
 
+        WaiterOrderResponse waiterOrderResponse2 = new WaiterOrderResponse(
+                3L,
+                OrderStatus.ACCEPTED,
+                fixedTime,
+                2L,
+                "A3"
+        );
+
         when(waiterOrderMapper.getAll())
                 .thenReturn(Set.of(order1, order2));
 
 
-        when(waiterOrderDtoToResponseMapper.mapDtoToResponse(order1))
+        when(waiterOrderDtoToResponseMapper.mapDtoToResponse(orderDto1))
                 .thenReturn(waiterOrderResponse1);
 
-        when(waiterOrderDtoToResponseMapper.mapDtoToResponse(order2))
+        when(waiterOrderDtoToResponseMapper.mapDtoToResponse(orderDto2))
                 .thenReturn(waiterOrderResponse2);
 
-        //then
+        //when
         Set<WaiterOrderResponse> responses = waiterService.getAllOrders();
 
         //then
@@ -214,29 +305,45 @@ class WaiterServiceImplTest {
     void testCreateOrder() {
         //given
         OffsetDateTime fixedTime = OffsetDateTime.now();
-        WaiterOrderEntity createdOrder = WaiterOrderEntity.builder()
+
+        WaiterOrderCreateRequestDto waiterOrderCreateRequestDto = new WaiterOrderCreateRequestDto(
+                1L,
+                "A1",
+                List.of(new DishSendDto("Pizza",1L),
+                        new DishSendDto("Salad",2L))
+
+        );
+        WaiterOrderDto expectedOrder = new WaiterOrderDto(
+                1L,
+                OrderStatus.ACCEPTED,
+                fixedTime,
+                1L,
+                "A1",
+                Set.of(new DishSendDto("Pizza",1L),
+        new DishSendDto("Salad",2L)));
+
+                WaiterOrderEntity.builder()
                 .id(1L)
                 .waiterId(1L)
                 .tableNo("A1")
                 .createDttm(fixedTime)
                 .status(OrderStatus.ACCEPTED)
                 .build();
-        when(waiterAccountMapper.existsById(createdOrder.getWaiterId())).thenReturn(true);
+        when(waiterAccountMapper.existsById(expectedOrder.id())).thenReturn(true);
 
         //when
-        var response = waiterService.createOrder(order);
-
+        var response = waiterService.createOrder(waiterOrderCreateRequestDto);
 
         //then
-        assertEquals(response.getWaiterId(), createdOrder.getWaiterId());
-        assertEquals(response.getTableNo(), createdOrder.getTableNo());
-        assertEquals(response.getStatus(), createdOrder.getStatus());
+        assertEquals(response.id(), expectedOrder.id());
+        assertEquals(response.waiterId(), expectedOrder.waiterId());
+        assertEquals(response.tableNo(), expectedOrder.tableNo());
+        assertEquals(response.dishes().size(), expectedOrder.dishes().size());
         assertNotNull(response);
     }
 
     /**
      * Проверяет, что метод getOrderStatus возвращает правильный статус заказа, если заказ с указанным id существует.
-     *
      * given: создаются необходимые объекты, имитируются ответы мока.
      * when: вызывается метод getOrderStatus для получения статуса заказа.
      * then: проверяется, что возвращаемый ответ соответствует ожидаемому.
@@ -290,22 +397,37 @@ class WaiterServiceImplTest {
     @Test
     void testServeOrder() {
         //given
-        WaiterOrderEntity createdOrder = WaiterOrderEntity.builder()
-                .id(1L)
-                .waiterId(1L)
-                .tableNo("A1")
-                .status(OrderStatus.ACCEPTED)
-                .build();
+        OffsetDateTime fixedTime = OffsetDateTime.now();
+
+        WaiterOrderDto waiterOrderDto = new WaiterOrderDto(
+                1L,
+                OrderStatus.ACCEPTED,
+                fixedTime,
+                1L,
+                "A1",
+                Set.of(new DishSendDto("Pizza",1L),
+                        new DishSendDto("Salad",2L)));
+
+        WaiterOrderEntity waiterOrderEntity1 = new WaiterOrderEntity(
+                1L,
+                OrderStatus.ACCEPTED,
+                fixedTime,
+                1L,
+                "A1",
+                Set.of(new DishSendDto("Pizza",1L),
+                        new DishSendDto("Salad",2L)));
+
+        when(waiterOrderDtoMapper.toWaiterOrderEntity(waiterOrderDto)).thenReturn(waiterOrderEntity1);
+
         //when
-        waiterService.serveOrder(createdOrder);
+        waiterService.serveOrder(waiterOrderDto);
 
         //then
-        assertEquals(OrderStatus.READY_TO_PICKUP, createdOrder.getStatus());
+        assertEquals(OrderStatus.READY_TO_PICKUP, waiterOrderEntity1.getStatus());
     }
 
     /**
      * Проверяет, что метод cancelOrder изменяет статус заказа на REJECTED_BY_THE_KITCHEN.
-     *
      * given: создается новый заказ с начальным статусом ACCEPTED.
      * when: вызывается метод cancelOrder, который должен изменить статус заказа.
      * then: проверяется, что статус заказа был изменен на REJECTED_BY_THE_KITCHEN.
@@ -313,17 +435,33 @@ class WaiterServiceImplTest {
     @Test
     void testCancelOrder() {
         //given
-        WaiterOrderEntity createdOrder = WaiterOrderEntity.builder()
-                .id(1L)
-                .waiterId(1L)
-                .tableNo("A1")
-                .status(OrderStatus.ACCEPTED)
-                .build();
+        OffsetDateTime fixedTime = OffsetDateTime.now();
+
+        WaiterOrderDto waiterOrderDto = new WaiterOrderDto(
+                1L,
+                OrderStatus.ACCEPTED,
+                fixedTime,
+                1L,
+                "A1",
+                Set.of(new DishSendDto("Pizza",1L),
+                        new DishSendDto("Salad",2L)));
+
+        WaiterOrderEntity waiterOrderEntity1 = new WaiterOrderEntity(
+                1L,
+                OrderStatus.ACCEPTED,
+                fixedTime,
+                1L,
+                "A1",
+                Set.of(new DishSendDto("Pizza",1L),
+                        new DishSendDto("Salad",2L)));
+
+        when(waiterOrderDtoMapper.toWaiterOrderEntity(waiterOrderDto)).thenReturn(waiterOrderEntity1);
+
         //when
-        waiterService.cancelOrder(createdOrder);
+        waiterService.cancelOrder(waiterOrderDto);
 
         //then
-        assertEquals(OrderStatus.REJECTED_BY_THE_KITCHEN, createdOrder.getStatus());
+        assertEquals(OrderStatus.REJECTED_BY_THE_KITCHEN, waiterOrderEntity1.getStatus());
     }
 
     /**

@@ -2,7 +2,8 @@ package com.liga.converter;
 
 import com.liga.dto.OrderToDishDto;
 import com.liga.entities.CompositeOrderToDishId;
-import com.liga.entities.OrderToDish;
+
+import com.liga.entities.OrderToDishEntity;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -12,7 +13,7 @@ class KitchenOrderToDishMapperTest {
     private final KitchenOrderToDishMapper mapper = Mappers.getMapper(KitchenOrderToDishMapper.class);
 
     /**
-     * Проверяет корректность маппинга из {@link OrderToDish} в {@link OrderToDishDto}.
+     * Проверяет корректность маппинга из {@link OrderToDishEntity} в {@link OrderToDishDto}.
      * given: Сущность OrderToDish с составным ID и количеством блюд.
      * when: Выполняется преобразование в DTO через метод `toDto`.
      * then: Все поля DTO соответствуют значениям из сущности.
@@ -21,7 +22,7 @@ class KitchenOrderToDishMapperTest {
     void testToDto_shouldMapCorrectly() {
         //given
         CompositeOrderToDishId id = new CompositeOrderToDishId(1L, 10L);
-        OrderToDish entity = OrderToDish.builder()
+        OrderToDishEntity entity = OrderToDishEntity.builder()
                 .id(id)
                 .dishesNumber(5L)
                 .build();
@@ -39,7 +40,7 @@ class KitchenOrderToDishMapperTest {
     }
 
     /**
-     * Проверяет корректность маппинга из {@link OrderToDishDto} в {@link OrderToDish}.
+     * Проверяет корректность маппинга из {@link OrderToDishDto} в {@link OrderToDishEntity}.
      * given: DTO с kitchenOrderId, dishId и количеством блюд.
      * when: DTO маппится в сущность OrderToDish.
      * then: Все поля сущности соответствуют значениям из DTO.
@@ -51,13 +52,13 @@ class KitchenOrderToDishMapperTest {
 
         CompositeOrderToDishId expectedId = new CompositeOrderToDishId(2L, 2L);
 
-        OrderToDish expectedEntity = OrderToDish.builder()
+        OrderToDishEntity expectedEntity = OrderToDishEntity.builder()
                 .id(expectedId)
                 .dishesNumber(3L)
                 .build();
 
         //when
-        OrderToDish entity = mapper.toEntity(dto);
+        OrderToDishEntity entity = mapper.toEntity(dto);
 
         //then
         assertEquals(expectedEntity, entity);

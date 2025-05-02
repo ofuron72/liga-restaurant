@@ -1,7 +1,16 @@
 package com.liga.service;
 
+import com.liga.converter.WaiterMenuDtoToResponseMapper;
+import com.liga.converter.WaiterOrderDtoMapper;
+import com.liga.converter.WaiterOrderDtoToResponseMapper;
+import com.liga.converter.WaiterOrderRequestToDtoMapper;
+import com.liga.converter.WaiterOrderStatusDtoToResponseMapper;
+import com.liga.dto.WaiterMenuItemResponse;
+import com.liga.dto.WaiterOrderCreateRequestDto;
 import com.liga.dto.WaiterOrderDto;
-import com.liga.dto.WaiterOrderStatusDto;
+import com.liga.dto.WaiterOrderResponse;
+import com.liga.dto.WaiterOrderStatusResponse;
+import com.liga.entities.WaiterOrderEntity;
 import com.liga.exceptions.OrderNotFoundException;
 import com.liga.exceptions.StatusNotFoundException;
 import com.liga.exceptions.WaiterNotFoundException;
@@ -14,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,18 +36,21 @@ import java.util.stream.Collectors;
 public class WaiterServiceImpl implements WaiterService {
 
     private final WaiterOrderMapper waiterOrderMapper;
+    private final WaiterOrderDtoMapper waiterOrderDtoMapper;
     private final WaiterOrderDtoToResponseMapper waiterOrderDtoToResponseMapper;
     private final WaiterOrderStatusDtoToResponseMapper waiterOrderStatusDtoToResponseMapper;
     private final WaiterMenuMapper waiterMenuMapper;
     private final WaiterMenuDtoToResponseMapper waiterMenuDtoToResponseMapper;
     private final WaiterAccountMapper waiterAccountMapper;
+    private final WaiterOrderRequestToDtoMapper waiterOrderRequestToDtoMapper;
 
     @Override
     public WaiterOrderResponse getOrderById(Long id) {
         log.debug("trying to get waiter order by id {}", id);
         var result = Optional
                 .ofNullable(waiterOrderDtoToResponseMapper
-                        .mapDtoToResponse(waiterOrderMapper.getById(id)))
+                        .mapDtoToResponse(waiterOrderDtoMapper
+                                .toWaiterOrderDto(waiterOrderMapper.getById(id))))
                 .orElseThrow(() -> new OrderNotFoundException(String.format("Order with id %s not found", id)));
         log.debug("successfully get waiter order by id {}", id);
         return result;
@@ -50,6 +61,7 @@ public class WaiterServiceImpl implements WaiterService {
         log.debug("trying to get waiter orders");
         var result = waiterOrderMapper.getAll()
                 .stream()
+                .map(waiterOrderDtoMapper::toWaiterOrderDto)
                 .map(waiterOrderDtoToResponseMapper::mapDtoToResponse)
                 .collect(Collectors.toSet());
         log.debug("successfully get {} orders", result.size());
@@ -57,9 +69,12 @@ public class WaiterServiceImpl implements WaiterService {
     }
 
     @Override
-    public WaiterOrderEntity createOrder(WaiterOrderEntity order) {
-        log.debug("trying to create order {}", order);
+    public WaiterOrderDto createOrder(WaiterOrderCreateRequestDto orderRequestDto) {
+        log.debug("trying to create order {}", orderRequestDto);
 
+        WaiterOrderEntity order = waiterOrderDtoMapper
+                .toWaiterOrderEntity(waiterOrderRequestToDtoMapper
+                        .map(orderRequestDto));
         if (!waiterAccountMapper.existsById(order.getWaiterId())) {
             throw new WaiterNotFoundException("Waiter not found with ID:"
                     + order.getWaiterId());
@@ -68,7 +83,7 @@ public class WaiterServiceImpl implements WaiterService {
         order.setCreateDttm(OffsetDateTime.now());
         waiterOrderMapper.create(order);
         log.debug("Order created: {}", order);
-        return order;
+        return waiterOrderDtoMapper.toWaiterOrderDto(order);
     }
 
     @Override
@@ -85,8 +100,11 @@ public class WaiterServiceImpl implements WaiterService {
      * Изменяет статус заказа на "готов к получению" и обновляет информацию о заказе.
      */
     @Override
-    public void serveOrder(WaiterOrderEntity order) {
-        log.debug("trying to serve order {}", order);
+    public void serveOrder(WaiterOrderDto orderRequestDto) {
+        log.debug("trying to serve order {}", orderRequestDto);
+
+        WaiterOrderEntity order = waiterOrderDtoMapper.toWaiterOrderEntity(orderRequestDto);
+
         order.setStatus(OrderStatus.READY_TO_PICKUP);
         waiterOrderMapper.updateStatusOrder(order);
         log.debug("Order with id={} ready to pickup", order.getId());
@@ -97,8 +115,12 @@ public class WaiterServiceImpl implements WaiterService {
      * и обновляет информацию о заказе.
      */
     @Override
-    public void cancelOrder(WaiterOrderEntity order) {
-        log.debug("trying to cancel order {}", order);
+    public void cancelOrder(WaiterOrderDto orderRequestDto) {
+        log.debug("trying to cancel order {}", orderRequestDto);
+
+        WaiterOrderEntity order = waiterOrderDtoMapper
+                .toWaiterOrderEntity(orderRequestDto);
+
         order.setStatus(OrderStatus.REJECTED_BY_THE_KITCHEN);
         waiterOrderMapper.updateStatusOrder(order);
         log.debug("Order with id={} rejected by the kitchen", order.getId());

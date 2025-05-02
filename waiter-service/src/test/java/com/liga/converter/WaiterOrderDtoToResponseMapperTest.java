@@ -25,14 +25,15 @@ class WaiterOrderDtoToResponseMapperTest {
     void testMapDtoToResponse_shouldMapCorrectly() {
         //given
         OffsetDateTime now = OffsetDateTime.now();
-        WaiterOrderDto dto = WaiterOrderDto.builder()
-                .id(1L)
-                .status(OrderStatus.ACCEPTED)
-                .createDttm(now)
-                .waiterId(123L)
-                .tableNo("B5")
-                .dishes(Set.of())
-                .build();
+        WaiterOrderDto dto = new WaiterOrderDto(
+                1L,
+                OrderStatus.ACCEPTED,
+                now,
+                123L,
+                "B5",
+                Set.of()
+        );
+
 
         WaiterOrderResponse expectedResponse = new WaiterOrderResponse(
                 1L,

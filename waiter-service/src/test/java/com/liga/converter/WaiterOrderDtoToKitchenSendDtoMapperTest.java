@@ -27,25 +27,26 @@ class WaiterOrderDtoToKitchenSendDtoMapperTest {
     @Test
     void testMap_waiterOrderDtoToCreateOrderEvent() {
         //given
+        OffsetDateTime now = OffsetDateTime.now();
         DishSendDto dish1 = new DishSendDto("pizza", 1L);
         DishSendDto dish2 = new DishSendDto("pasta", 2L);
 
-        WaiterOrderDto waiterOrderDto = WaiterOrderDto.builder()
-                .id(1L)
-                .waiterId(1L)
-                .status(OrderStatus.ACCEPTED)
-                .createDttm(OffsetDateTime.now())
-                .tableNo("A3")
-                .dishes(Set.of(dish1, dish2))
-                .build();
+        WaiterOrderDto waiterOrderDto = new WaiterOrderDto(
+                1L,
+                OrderStatus.ACCEPTED,
+                now,
+                1L,
+                "A3",
+                Set.of(dish1, dish2));
+
 
         //when
         CreateOrderEvent result = mapper.map(waiterOrderDto);
 
         //then
         assertNotNull(result);
-        assertEquals(waiterOrderDto.getWaiterId(), result.waiterOrderNo());
-        assertEquals(waiterOrderDto.getId(), result.orderIdWaiterService());
+        assertEquals(waiterOrderDto.waiterId(), result.waiterOrderNo());
+        assertEquals(waiterOrderDto.id(), result.orderIdWaiterService());
         assertNotNull(result.dishes());
         assertEquals(2, result.dishes().size());
         assertTrue(result.dishes().containsAll(List.of(dish1, dish2)));

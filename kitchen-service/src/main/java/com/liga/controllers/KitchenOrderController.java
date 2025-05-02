@@ -1,10 +1,16 @@
 package com.liga.controllers;
 
-import com.liga.dto.KitchenOrderDto;
-import com.liga.dto.ResponseDto;
+import com.liga.dto.KitchenOrderResponse;
+import com.liga.dto.ResponseMessage;
 import com.liga.service.KitchenService;
 import com.liga.service.orchestrator.KitchenOrderOrchestrator;
-import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +53,8 @@ public class KitchenOrderController {
             )
     })
     @GetMapping
-    public ResponseEntity<Set<KitchenOrderDto>> getAllOrders() {
-        Set<KitchenOrderDto> orders = kitchenService.getAllOrders();
+    public ResponseEntity<Set<KitchenOrderResponse>> getAllOrders() {
+        Set<KitchenOrderResponse> orders = kitchenService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 

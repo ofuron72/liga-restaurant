@@ -1,7 +1,7 @@
 package com.liga.controllers;
 
 import com.liga.KitchenServiceApplication;
-import com.liga.entities.KitchenOrder;
+import com.liga.entities.KitchenOrderEntity;
 import com.liga.objects.KitchenStatus;
 import com.liga.repository.KitchenOrderRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,12 +65,12 @@ class KitchenOrderControllerTest {
 
     @BeforeEach
     void setup() {
-        KitchenOrder kitchenOrder1 = KitchenOrder.builder()
+        KitchenOrderEntity kitchenOrder1 = KitchenOrderEntity.builder()
                 .orderIdWaiterService(1L)
                 .waiterOrderNo(1L)
                 .status(KitchenStatus.ACCEPTED)
                 .build();
-        KitchenOrder kitchenOrder2 = KitchenOrder.builder()
+        KitchenOrderEntity kitchenOrder2 = KitchenOrderEntity.builder()
                 .orderIdWaiterService(2L)
                 .status(KitchenStatus.ACCEPTED)
                 .waiterOrderNo(2L)

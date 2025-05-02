@@ -2,6 +2,7 @@ package com.liga.converter;
 
 import com.liga.dto.CreateOrderEvent;
 import com.liga.dto.DishSendDto;
+import com.liga.dto.WaiterOrderDto;
 import com.liga.entities.WaiterOrderEntity;
 import com.liga.objects.OrderStatus;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class WaiterOrderEntityDtoToKitchenSendMapperTest {
+class WaiterOrderDtoToKitchenSendMapperTest {
 
     private final WaiterOrderDtoToKitchenSendDtoMapper mapper =
             Mappers.getMapper(WaiterOrderDtoToKitchenSendDtoMapper.class);
@@ -28,25 +29,25 @@ class WaiterOrderEntityDtoToKitchenSendMapperTest {
     @Test
     void testMap_waiterOrderDtoToCreateOrderEvent() {
         //given
+        OffsetDateTime now = OffsetDateTime.now();
         DishSendDto dish1 = new DishSendDto("pizza", 1L);
         DishSendDto dish2 = new DishSendDto("pasta", 2L);
 
-        WaiterOrderEntity waiterOrderEntity = WaiterOrderEntity.builder()
-                .id(1L)
-                .waiterId(1L)
-                .status(OrderStatus.ACCEPTED)
-                .createDttm(OffsetDateTime.now())
-                .tableNo("A3")
-                .dishes(Set.of(dish1, dish2))
-                .build();
-
+        WaiterOrderDto waiterOrderDto = new WaiterOrderDto(
+                1L,
+                OrderStatus.ACCEPTED,
+                now,
+                1L,
+                "A3",
+                Set.of(dish1, dish2)
+        );
         //when
-        CreateOrderEvent result = mapper.map(waiterOrderEntity);
+        CreateOrderEvent result = mapper.map(waiterOrderDto);
 
         //then
         assertNotNull(result);
-        assertEquals(waiterOrderEntity.getWaiterId(), result.waiterOrderNo());
-        assertEquals(waiterOrderEntity.getId(), result.orderIdWaiterService());
+        assertEquals(waiterOrderDto.waiterId(), result.waiterOrderNo());
+        assertEquals(waiterOrderDto.id(), result.orderIdWaiterService());
         assertNotNull(result.dishes());
         assertEquals(2, result.dishes().size());
         assertTrue(result.dishes().containsAll(List.of(dish1, dish2)));

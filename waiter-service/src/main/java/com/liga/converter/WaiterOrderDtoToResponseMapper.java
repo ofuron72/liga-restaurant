@@ -1,14 +1,14 @@
 package com.liga.converter;
 
-import com.liga.entities.WaiterOrderEntity;
+import com.liga.dto.WaiterOrderDto;
 import com.liga.dto.WaiterOrderResponse;
 import org.mapstruct.Mapper;
 
 /**
- * Mapper объекта {@link WaiterOrderEntity}
+ * Mapper объекта {@link WaiterOrderDto}
  * в объект {@link WaiterOrderResponse}
  */
 @Mapper
 public interface WaiterOrderDtoToResponseMapper {
-    WaiterOrderResponse mapDtoToResponse(WaiterOrderEntity dto);
+    WaiterOrderResponse mapDtoToResponse(WaiterOrderDto dto);
 }

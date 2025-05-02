@@ -1,13 +1,9 @@
-package com.liga.dto;
+package com.liga.entities;
 
 import com.liga.dto.DishSendDto;
 import com.liga.objects.OrderStatus;
-import lombok.Setter;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.ToString;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+
 import java.time.OffsetDateTime;
 import java.util.Set;
 

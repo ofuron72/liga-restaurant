@@ -1,7 +1,8 @@
 package com.liga.converter;
 
 import com.liga.dto.KitchenOrderDto;
-import com.liga.entities.KitchenOrder;
+
+import com.liga.entities.KitchenOrderEntity;
 import com.liga.objects.KitchenStatus;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -14,7 +15,7 @@ class KitchenOrderMapperTest {
     private final KitchenOrderMapper mapper = Mappers.getMapper(KitchenOrderMapper.class);
 
     /**
-     * Проверяет корректность маппинга из {@link KitchenOrder} в {@link KitchenOrderDto}.
+     * Проверяет корректность маппинга из {@link KitchenOrderEntity} в {@link KitchenOrderDto}.
      * given: Сущность KitchenOrder с установленными полями.
      * when: Выполняется преобразование через метод `toDto`.
      * then: Полученный KitchenOrderDto содержит те же значения полей, что и исходная сущность.
@@ -22,7 +23,7 @@ class KitchenOrderMapperTest {
     @Test
     void testToDto_shouldMapFieldsCorrectly() {
         //given
-        KitchenOrder order = KitchenOrder.builder()
+        KitchenOrderEntity order = KitchenOrderEntity.builder()
                 .id(1L)
                 .waiterOrderNo(1L)
                 .status(KitchenStatus.ACCEPTED)
@@ -45,7 +46,7 @@ class KitchenOrderMapperTest {
     }
 
     /**
-     * Проверяет корректность маппинга из {@link KitchenOrderDto} в {@link KitchenOrder}.
+     * Проверяет корректность маппинга из {@link KitchenOrderDto} в {@link KitchenOrderEntity}.
      * given: DTO объект KitchenOrderDto с заполненными полями.
      * when: Выполняется преобразование через метод `toEntity`.
      * then: Полученная сущность KitchenOrder содержит те же значения полей, что и исходный DTO.
@@ -60,7 +61,7 @@ class KitchenOrderMapperTest {
                 .orderIdWaiterService(1L)
                 .build();
 
-        KitchenOrder expectedEntity = KitchenOrder.builder()
+        KitchenOrderEntity expectedEntity = KitchenOrderEntity.builder()
                 .id(2L)
                 .waiterOrderNo(1L)
                 .status(KitchenStatus.REJECTED)
@@ -68,7 +69,7 @@ class KitchenOrderMapperTest {
                 .build();
 
         //when
-        KitchenOrder entity = mapper.toEntity(dto);
+        KitchenOrderEntity entity = mapper.toEntity(dto);
 
         //then
         assertEquals(expectedEntity, entity);
